@@ -1,14 +1,25 @@
 {
-  "name": "manager_1.0",
-  "version": "0.1.0",
+  "name": "projekt_zaliczeniowy",
+  "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "author": "Łukasz Piotrkowski <lukasz.piotrkowski@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "express": "3.x",
-  }
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-bower-task": "^0.3.4",
+    "grunt-contrib-less": "^0.11.0",
+    "grunt-contrib-watch": "^0.6.1"
+  },
+   "dependencies": {
+        "express": "3.x",
+        "socket.io": "^0.9.16",
+        "connect":"*",
+     "passport":"*",
+     "passport-local":"*",
+     "mysql":"*",
+     "ejs": "*"
+    }
 }

@@ -2,10 +2,10 @@ var http = require('http');
 var express = require('express');
 var app = express();
 var connect = require('connect');
-var flash = require('connect-flash');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var sessionStore = new connect.session.MemoryStore();
+var url = require('url');
 
 var mysql = require('mysql');
 var sqlInfo = {
@@ -21,7 +21,7 @@ var sessionKey = 'connect.sid';
 var server;
 var sio;
 
-// Konfiguracja passport.js
+
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
@@ -34,7 +34,7 @@ passport.deserializeUser(function (obj, done) {
 passport.use(new LocalStrategy(
     function (username, password, done) {
   		  client = mysql.createConnection(sqlInfo);
-        client.query("select username,role from Employee where username='"+username+"' AND password='"+password+"';",function (err,rows){
+        client.query("select username,role,name,surname from Employee where username='"+username+"' AND password='"+password+"';",function (err,rows){
         
         var user;
 
@@ -44,6 +44,7 @@ passport.use(new LocalStrategy(
 
         if(err){
         	console.log(err);
+
         return done(err);           
     	}
     	if(!user){
@@ -71,22 +72,24 @@ app.use(express.static('public'));
 
 app.post('/login',
   passport.authenticate('local', { successRedirect: '/',
-                                   failureRedirect: '/',
+                                   failureRedirect: '/fail',
                                    failureFlash: true })
 );
 
+app.get('/fail', function (req, res) {
+    return res.render('public/login.ejs',{error: "Niepoprawne dane logowania"});
+});
+
 app.get('/', function (req, res) {
-	
-	if(!req.user){
-		return res.redirect('/login.html');
+  if(!req.user){
+		res.render('public/login.ejs',{ error:''});
 	}
 	if(req.user && req.user.role === 'admin'){
-		return res.redirect('admin.html');
+    return res.render('admin.ejs',{username: req.user.username});
 	}
   if(req.user && req.user.role === 'user'){
-    return res.redirect('user.html');
+    return res.render('user.ejs', {username: req.user.username});
   }
-    
 });
 
 app.get('/logout', function (req, res) {
@@ -95,28 +98,7 @@ app.get('/logout', function (req, res) {
     client.end(function(err) {
       console.log("Rozłączono z bazą danych");
   });
-    return res.redirect('/');
-});
-
-
-app.get('/admin', function (req, res) {
-	if(req.user != null && req.user.role === 'admin'){
-		return res.redirect('admin.html');
-	}
-  if(req.user != null && req.user.role === 'user'){
-    return res.redirect('user.html');
-  }
-	return res.redirect('login.html');   
-});
-
-app.get('/user', function (req, res) {
-  if(req.user != null && req.user.role === 'user'){
-    return res.redirect('user.html');
-  }
-  if(req.user != null && req.user.role === 'admin'){
-    return res.redirect('admin.html');
-  }
-  return res.redirect('login.html');   
+    return res.render('public/login.ejs',{error:""});
 });
 
 server = http.createServer(app);

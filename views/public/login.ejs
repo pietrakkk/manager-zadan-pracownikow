@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script type="text/javascript" src="lib/js/jquery/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+    	<script type="text/javascript" src='js/script.js'></script>
+		<title>Manager zadań pracowników 1.0</title>
+	</head>
+	<body>
+		<div class="header">
+			<h1>Manager zadań pracowników 1.0</h1>
+		</div>
+		<div class="login_form">
+			<h3>Panel logowania</h3>
+			<form action="/login" method="post">
+				<div class="username">
+					<label>Użytkownik:</label>
+					<input type="text" id="username" name="username"/><br/></div>
+    			<div class="password">
+    				<label>Hasło:</label>
+    				<input type="password" id="password" name="password"/>
+    			</div>
+    			<div class="submit">
+    				<input id="send_login" type="submit" value="Zaloguj"/>
+    			</div>	
+			</form>
+		</div>
+		<div class="error">
+				<%= error %>
+			</div>
+	</body>
+</html>
