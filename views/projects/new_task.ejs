@@ -1,0 +1,26 @@
+
+		<h2>Nowy projekt</h2>
+		<div class="new_employee">
+			<form action="/add_project" method="post">
+				<div class="name">
+					<label>Nazwa projektu:</label>
+					<input type="text" id="project_name" name="project_name"/><br/>
+				</div>
+				<div class="opis">
+					<label>Opis:</label>
+					<textarea class='description' rows="6" cols="60"/>
+				</div>
+				<div class="team">
+					<label>Członkowie:</label>
+					<select  multiple class='czlonkowie'>
+  						<option value="volvo">Volvo</option>
+ 						<option value="saab">Saab</option>
+  						<option value="mercedes">Mercedes</option>
+  						<option value="audi">Audi</option>
+					</select>
+				</div>
+    			<div class="submit">
+    				<input id="send_login" type="submit" value="Zatwierdź!"/>
+    			</div>	
+			</form>
+		</div>

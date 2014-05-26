@@ -2,6 +2,7 @@ body {
   font-family: arial;
   width: 100%;
   background: lightskyblue;
+  padding-bottom: 20px;
 }
 .body {
   width: 1200px;
@@ -57,10 +58,12 @@ ul li {
 }
 .content {
   float: left;
-  padding: 20px 0px 0px 20px;
-  border: 1px solid;
-  width: 930px;
-  min-height: 400x;
+  padding: 5px 0px 0px 20px;
+  border: 1px solid white;
+  width: 900px;
+  min-height: 400px;
+  background: yellow;
+  padding-bottom: 20px;
 }
 .title {
   width: 220px;
@@ -96,7 +99,56 @@ ul {
 p {
   margin-top: -10px;
 }
+.tasks {
+  border-collapse: collapse;
+  text-align: center;
+}
 tr,
 td {
-  border: 2px solid white;
+  border: 3px solid yellow;
+  background: orange;
+  height: 50px;
+}
+.id_task {
+  height: 50px;
+}
+.nazwa {
+  with: 300px;
+}
+.opis {
+  width: 300px;
+  overflow: break-word;
+  text-align: left;
+}
+.opcje {
+  width: 200px;
+}
+.team {
+  width: 200px;
+}
+.projekt {
+  width: 250px;
+}
+h3 {
+  float: center;
+}
+th {
+  border: 3px solid yellow;
+  background: #C08000;
+  height: 40px;
+}
+.projects {
+  border-collapse: collapse;
+  text-align: center;
+}
+.czlonkowie {
+  width: 300px;
+  font-size: 15px;
+}
+.name_surname {
+  width: 300px;
+}
+.task_reciever {
+  width: 300px;
+  font-size: 18px;
 }

@@ -12,33 +12,37 @@
 		<div class="header">
 			<h1>Manager zadań pracowników 1.0</h1>
 		</div>
+		<p></p>
 		<div class="logged_info">
 			Zalogowany użytkownik: <strong><%= username %></strong>
 			<a href="/logout">Wyloguj z systemu</a>
 		</div>
+		<p></p>
 		<div class="menu_left">
-			
 				<div id="0" class="menu">
 					<p class="title">Projekty</p>		
 					<ul>
-						<li>Dodaj</li><li>Usuń</li><li>Pokaż wszystkie</li><li>Edytuj dane</li>
+						<li>Nowy projekt</li>
+						<li>Pokaż wszystkie</li>
 					</ul>
 				</div>
 				<div id="1" class="menu">
 					<p class="title">Pracownicy</p>	
 					<ul>
-						<li>Dodaj</li><li>Usuń</li><li>Pokaż wszystkie</li><li>Edytuj dane</li>
+						<li id='new_employee'>Dodaj pracownika</li>
+						<li>Lista pracowników</li>
 					</ul>
 				</div>
 				<div id="2" class="menu">
 					<p class="title">Zadania</p>	
 						<ul>
-							<li>Dodaj</li><li>Usuń</li><li>Pokaż wszystkie</li><li>Edytuj dane</li>
+							<li>Nowe zadanie</li>
+							<li id='all_tasks'>Lista zadań</li>
 						</ul>	
 				</div>
 		</div>
 		<div class="content">
-
+			
 		</div>
 		</div>
 	</body>

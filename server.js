@@ -9,11 +9,11 @@ var url = require('url');
 
 var mysql = require('mysql');
 var sqlInfo = {
-	host: 'localhost',
-	user: 'root',
-	password: 'root',
-	database: 'manager_pracownikow'
-	}
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'manager_pracownikow'
+  }
 
 
 var sessionSecret = 'wielkiSekret44';
@@ -21,19 +21,19 @@ var sessionKey = 'connect.sid';
 var server;
 var sio;
 
-
+////////////////////logowanie/////////////////////////////////////////
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
 
 passport.deserializeUser(function (obj, done) {
-	done(null, obj);
+  done(null, obj);
 });
 
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
-  		  client = mysql.createConnection(sqlInfo);
+        client = mysql.createConnection(sqlInfo);
         client.query("select username,role,name,surname from Employee where username='"+username+"' AND password='"+password+"';",function (err,rows){
         
         var user;
@@ -43,18 +43,18 @@ passport.use(new LocalStrategy(
         }
 
         if(err){
-        	console.log(err);
+          console.log(err);
 
         return done(err);           
-    	}
-    	if(!user){
-         	return done(null,false);           
-    	}
-    		return done(null, {
+      }
+      if(!user){
+          return done(null,false);           
+      }
+        return done(null, {
                 username: username,
                 role: user.role
             })
-    	});
+      });
     }
 ));
 
@@ -69,26 +69,26 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));
 
+/////////////////////////////routes//////////////////////////////////////////////
 
 app.post('/login',
   passport.authenticate('local', { successRedirect: '/',
                                    failureRedirect: '/fail',
                                    failureFlash: true })
 );
-
 app.get('/fail', function (req, res) {
     return res.render('public/login.ejs',{error: "Niepoprawne dane logowania"});
 });
 
 app.get('/', function (req, res) {
   if(!req.user){
-		res.render('public/login.ejs',{ error:''});
-	}
-	if(req.user && req.user.role === 'admin'){
-    return res.render('admin.ejs',{username: req.user.username});
-	}
+    res.render('public/login.ejs',{ error:''});
+  }
+  if(req.user && req.user.role === 'admin'){
+    return res.render('admin/admin.ejs',{username: req.user.username});
+  }
   if(req.user && req.user.role === 'user'){
-    return res.render('user.ejs', {username: req.user.username});
+    return res.render('employee/user.ejs', {username: req.user.username});
   }
 });
 
@@ -101,9 +101,77 @@ app.get('/logout', function (req, res) {
     return res.render('public/login.ejs',{error:""});
 });
 
+app.get('/tasks', function (req, res) {
+  if(req.user && req.user.role === 'user' || req.user.role === 'admin'){
+    return res.send({tasks:"feagareg"});
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+app.get('/new_employee', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+      return res.render('employee/new_employee.ejs');
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+app.get('/add_employee', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+      //dodawanie pracownika
+      return res.render('employee/new_employee.ejs');
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+
+app.get('/page_tasks', function (req, res) {
+  if(req.user && req.user.role === 'user' || req.user.role === 'admin'){
+    return res.render('task/tasks.ejs');
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+app.get('/all_projects', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+    return res.render('projects/projects.ejs');
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+app.get('/new_project', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+    return res.render('projects/new.ejs');
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+app.get('/employees_list', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+    return res.render('employee/employees.ejs');
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+app.get('/new_task', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+    return res.render('task/new_task.ejs');
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+/////////////////////database queriies/////////////////////////////
+
+
+//TODO: zapytania projekt
+
 server = http.createServer(app);
 
 server.listen(3000, function () {
     console.log('Serwer pod adresem http://localhost:3000/');
 });
-

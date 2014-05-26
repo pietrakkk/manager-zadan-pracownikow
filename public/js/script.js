@@ -1,5 +1,25 @@
 $( document ).ready(function() {
- 	var isMenuEmpty = [true,true,true];
+
+  var loadTaskList = function() {
+        $.get( "/page_tasks", function( data ) {
+          $( ".content" ).html( data );
+        });
+       //testowe dodanie
+       $.ajax({
+          url: "/tasks",
+          dataType: 'json',
+          success: function(data)
+          {
+            if(data){    
+              $(".tasks").find("tr:gt(0)").remove();
+              $('.tasks').append("<tr><td class='id_task'></td><td class='opis'></td><td class='projekt'><td class='opcje'></td><td class='status'></td></tr>");
+            }
+          }
+      });
+     };
+
+     loadTaskList();
+
 
  	$( "#send_login" ).click(function(event) {
   		
@@ -12,38 +32,70 @@ $( document ).ready(function() {
   		}
 	});
 
-	// $(".menu p").click(function(event) {
- //      var id = $(this).parent().attr("id");
- //      switch(id) {
- //        case "0":
- //            if(isMenuEmpty[id]){
- //              $("#0 ul").append("<li>Dodaj</li><li>Usuń</li><li>Pokaż wszystkie</li><li>Edytuj dane</li>");
- //              isMenuEmpty[id] = false;
- //            }else{
- //             $("#0 ul").empty();
- //             isMenuEmpty[id] = true;
- //            }
- //        break;
- //        case "1":
- //         if(isMenuEmpty[id]){
- //              $("#1 ul").append("<li>Dodaj</li><li>Usuń</li><li>Pokaż wszystkie</li><li>Edytuj dane</li>");
- //              isMenuEmpty[id] = false;
- //            }else{
- //            $("#1 ul").empty();
- //             isMenuEmpty[id] = true;
- //            }
- //        break;
- //        case "2":
- //         if(isMenuEmpty[id]){
- //              $("#2 ul").append("<li>Dodaj</li><li>Usuń</li><li>Pokaż wszystkie</li><li>Edytuj dane</li>");
- //              isMenuEmpty[id] = false;
- //            }else{
- //            $("#2 ul").empty();
- //             isMenuEmpty[id] = true;
- //            }
- //        break;
- //      }
+    $("#new_employee").click(function(event) {
+      $.get( "/new_employee", function( data ) {
+   //      $(".content").empty();
+         $( ".content" ).html( data );
+        
+    });
+  });
+
+     $("#all_tasks").click(function(event) {
+      $.get( "/page_tasks", function( data ) {
+       //  $(".content").empty();
+         $( ".content" ).html( data );
+    });
       
-     
- //  	});
+       //testowe dodanie
+       $.ajax({
+          url: "/tasks",
+          dataType: 'json',
+          success: function(data)
+          {
+            if(data){    
+              $(".tasks").find("tr:gt(0)").remove();
+              $('.tasks').append("<tr><td class='id_task'></td><td class='opis'></td><td class='projekt'><td class='opcje'></td><td class='status'></td></tr>");
+            }
+          }
+      });
+  });
+
+  $("#all_projects").click(function(event) {
+      $.get( "/all_projects", function( data ) {
+  
+          $( ".content" ).empty();
+         $( ".content" ).html( data );
+        
+        //reczne testowe dodanie
+
+        //  $(".projects").find("tr:gt(0)").remove();
+          $(".projects").append("<tr><td class='nazwa'></td><td class='opis'></td><td class='team'></td><td class='opcje'></td></tr>");
+          $(".projects").append("<tr><td class='nazwa'></td><td class='opis'></td><td class='team'></td><td class='opcje'></td></tr>");
+          $(".projects").append("<tr><td class='nazwa'></td><td class='opis'></td><td class='team'></td><td class='opcje'></td></tr>");
+          $(".projects").append("<tr><td class='nazwa'></td><td class='opis'></td><td class='team'></td><td class='opcje'></td></tr>");
+          $(".projects").append("<tr><td class='nazwa'></td><td class='opis'></td><td class='team'></td><td class='opcje'></td></tr>");
+    });
+  });
+     $("#new_project").click(function(event) {
+      $.get( "/new_project", function( data ) {
+         $( ".content" ).html( data );
+      });
+   });
+  $("#employees_list").click(function(event) {
+      $.get( "/employees_list", function( data ) {
+         $( ".content" ).html( data );
+                  //testowe dodanie "na sztywno"
+                  $(".projects").append("<tr><td class='name_surname'></td><td class='opcje'></td></tr>");
+                  $(".projects").append("<tr><td class='name_surname'></td><td class='opcje'></td></tr>");
+                  $(".projects").append("<tr><td class='name_surname'></td><td class='opcje'></td></tr>");
+                  $(".projects").append("<tr><td class='name_surname'></td><td class='opcje'></td></tr>");
+                  $(".projects").append("<tr><td class='name_surname'></td><td class='options'></td></tr>");
+      });
+   });
+   $("#new_task").click(function(event) {
+      $.get( "/new_task", function( data ) {
+         $( ".content" ).html( data );
+      });
+   });
+
 });
