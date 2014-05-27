@@ -202,8 +202,12 @@ app.post('/check_username', function (req, res) {
     if(err){
       console.log(err);           
     }
-    if(rows[0]){
-      return res.send(true);  
+      if(rows){
+        if(rows[0]){
+          return res.send(true);  
+      }else{
+        return res.send(false);  
+      }
     }else{
        return res.send(false);  
     }
@@ -211,6 +215,44 @@ app.post('/check_username', function (req, res) {
   }else{
      return res.render('public/login.ejs',{error:""});
   }
+});
+
+
+app.post('/check_projectname', function (req, res) {
+  var projectname = req.body.name;
+  if(req.user && req.user.role === 'admin'){
+    client = mysql.createConnection(sqlInfo);
+    client.query('SELECT name FROM Project WHERE name=\''+projectname+"\';",function (err,rows){
+    console.log(rows);
+    if(err){
+      console.log(err);           
+    }
+    if(rows){
+      if(rows[0]){
+        return res.send(true);  
+      }else{
+        return res.send(false);  
+      }
+    }else{
+       return res.send(false);  
+    }
+    });
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+app.post('/add_project', function (req, res) {
+
+  if(req.user && req.user.role === 'admin'){
+      var data = req.body;
+      var team = data['team'];
+      delete data['team'];
+      addProject(data,team);
+      return res.redirect('/');
+   }else{
+      return res.render('public/login.ejs',{error:""});
+   }
 });
 
 /////////////////////database queriies/////////////////////////////
@@ -224,6 +266,34 @@ var addEmployee = function(data) {
     }
   });
 };
+
+var addProject = function(data,team) {
+    client = mysql.createConnection(sqlInfo);
+    var sql = client.query('INSERT INTO Project SET ? ;',data,function (err,rows){
+    if(err){
+      console.log(err);           
+    }else{
+      if(team.length > 0){
+         client.query('SELECT id_project FROM Project WHERE name=\''+data['name']+"\';",function (err,rows){
+          var id_project = rows[0].id_project;
+          var tempJSON;
+          for(var i = 0 ; i < team.length ; i++){
+              tempJSON = {
+                id_project: id_project,
+                id_employee: team[i]
+              };
+              client.query('INSERT INTO ProjectEmployee SET ? ;',tempJSON,function (err,rows){
+                 if(err){
+                    console.log(err);           
+                  }
+              });
+          }
+      });
+    }
+  }
+});
+};
+
 
 server = http.createServer(app);
 

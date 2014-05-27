@@ -178,5 +178,8 @@ th {
 }
 .new_project {
   margin: 0 auto;
-  display: table-cell;
+}
+.new_project label {
+  float: left;
+  text-align: right;
 }

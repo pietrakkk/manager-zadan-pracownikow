@@ -23,9 +23,30 @@ $( document ).ready(function() {
 		    var validateData = function (event,data) {
 	        var nameRegex = /^[A-Z][a-z]*/;
 	    	var isError = false;
+		 	
 		 	if(!nameRegex.test(data)){
 				$("#project_name_error").html("Nieprawidłowa nazwa!");
-				event.preventDefault();
+				isError = true;
 		 	}
-		 }
+
+		 	$.ajax({
+            	type: "POST",
+            	url: "/check_projectname",
+            	dataType: "json",
+           		contentType: "application/json",
+            	data: JSON.stringify({name: data}),
+            	 async: false, 
+            	success: function (response) {             
+            	
+            	if(response){
+            		$('#project_name_error').html('Podana nazwa projektu istnieje w bazie!');
+            		isError = true;
+            	}
+            }  
+        	});
+			if(isError){
+				event.preventDefault();
+			}
+
+			};		 
 });
