@@ -1,7 +1,7 @@
 body {
   font-family: arial;
   width: 100%;
-  background: lightskyblue;
+  background: #62B1D0;
   padding-bottom: 20px;
 }
 .body {
@@ -22,7 +22,6 @@ body {
   margin-right: auto ;
   background: orange;
   padding: 10px 20px 10px 20px;
-  border: 1px solid white;
 }
 .new_employee {
   display: table-row;
@@ -36,13 +35,11 @@ input {
   padding-top: 5px;
 }
 .header {
-  padding-top: 30px;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  padding: 20px 0px 0px 20px;
-  background: yellow;
-  border: 1px solid white;
+  padding: 20px 0px 20px 20px;
+  background: #FFBC73;
 }
 .logged_info {
   width: 100%;
@@ -57,16 +54,14 @@ ul li {
 }
 .menu_left {
   float: left;
-  width: 240px;
+  width: 20%;
   padding-top: 15px;
 }
 .content {
   float: left;
-  padding: 5px 0px 0px 20px;
-  border: 1px solid white;
-  width: 900px;
+  width: 80%;
   min-height: 400px;
-  background: yellow;
+  background: #04859D;
   padding-bottom: 20px;
 }
 .title {
@@ -74,8 +69,7 @@ ul li {
   height: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
-  border: 1px solid white;
-  background: orange;
+  background: #FFA340;
   text-align: center;
   font-size: 18px;
 }
@@ -84,11 +78,11 @@ li {
   height: 15px;
   padding-top: 10px;
   padding-bottom: 10px;
-  border: 1px solid white;
-  background: yellow;
+  background: #3AA6D0;
   text-align: center;
   font-size: 16px;
   margin-left: -30px;
+  border: 2px solid #62b1d0;
 }
 li:hover {
   background-color: lightskyblue;
@@ -103,14 +97,21 @@ ul {
 p {
   margin-top: -10px;
 }
+.table_title {
+  padding-top: 20px;
+  text-align: center;
+  color: white;
+  font-size: 30px;
+}
 .tasks {
   border-collapse: collapse;
   text-align: center;
+  width: 100%;
 }
 .tasks tr,
 .tasks td {
-  border: 3px solid yellow;
-  background: orange;
+  border: 3px solid #04859D;
+  background: #62B1D0;
   height: 50px;
 }
 .tasks .id_task {
@@ -131,18 +132,19 @@ h3 {
   float: center;
 }
 th {
-  border: 3px solid yellow;
-  background: #C08000;
+  border: 3px solid #04859D;
+  background: #3AA6D0;
   height: 40px;
 }
 .projects {
   border-collapse: collapse;
   text-align: center;
+  width: 100%;
 }
 .projects tr,
 .projects td {
-  border: 3px solid yellow;
-  background: orange;
+  border: 3px solid #04859D;
+  background: #62B1D0;
   height: 50px;
 }
 .projects .team {
@@ -155,10 +157,27 @@ th {
   width: 300px;
   font-size: 15px;
 }
-.name_surname {
+.employees {
+  border-collapse: collapse;
+  text-align: center;
+  width: 100%;
+}
+.employees tr,
+.employees td {
+  border: 3px solid #04859D;
+  background: #62B1D0;
+  height: 50px;
+}
+.employees .name_surname {
+  width: 70%;
+}
+.employees .options {
+  with: 30%;
+}
+.new_employee .name_surname {
   width: 300px;
 }
-.task_reciever {
+.new_employee .task_reciever {
   width: 300px;
   font-size: 18px;
 }

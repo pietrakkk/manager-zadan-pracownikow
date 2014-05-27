@@ -77,7 +77,7 @@ $( document ).ready(function() {
          $( ".content" ).html( data );
         $.getJSON( "/employees", function( data ) {
             for(var i = 0; i < data.length ; i++){
-              $(".projects").append("<tr><td class='name_surname'>"+data[i].name+" "+data[i].surname+"</td><td class='options'></td></tr>");
+              $(".employees").append("<tr><td class='name_surname'>"+data[i].name+" "+data[i].surname+"</td><td class='options'></td></tr>");
             }
           });
 
