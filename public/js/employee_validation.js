@@ -1,12 +1,9 @@
 $( document ).ready(function() {
-
-	
 	$('#register_employee').click(function(event) {
-     
      	$('.error').empty();
 
       var name = $("#name").val(),
-          surname = $("#surname").val().trim(),
+          surname = $("#surname").val(),
           username = $("#username").val(),
           password = $("#password").val();
           confirm = $("#confirm_password").val();
@@ -31,19 +28,31 @@ $( document ).ready(function() {
 			isError = true;
 			$("#surname_error").html("Nieprawidłowe nazwisko!");	
 		}
-		if(!checkUsername(data[2])){
-			isError = true;
-			$("#username_error").html("Podany login istnieje w bazie!");
-		}
 		if(!checkPassword(data[3],data[4])){
 			isError = true;
 			$("#confirm_password_error").html("Hasła nie są takie same!");
 		}
-		if(isError){
+
+		var user = $('#username').val();
+	 	$.ajax({
+            type: "POST",
+            url: "/check_username",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({username: user}),
+             async: false, 
+            success: function (response) {             
+            	if(response){
+            		$('#username_error').html('Podany użytkownik istnieje w bazie!');
+            		isError = true;
+            	}
+            }  
+        });
+          if(isError){
 			event.preventDefault();
-		}else{
-			alert("Pomyślnie dodano pracownika!");
-		}
+		  }else{
+				alert("Pomyślnie dodano pracownika!");
+		 }
 	 };
 
 	 var checkPassword = function (pass1, pass2) {
@@ -51,12 +60,8 @@ $( document ).ready(function() {
 	 	else return true;
 	 };
 
-	 var checkUsername = function(username) {
-	 	var isExists = false;
-
-	 	//TODO: dodać ajaxowe sprawdzanie czy istnieje w bazie
-	 	return true;
-	 }
+	 $('#username').focusout(function() {
+	  });
 });
 
 
