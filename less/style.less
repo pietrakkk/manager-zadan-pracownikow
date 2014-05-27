@@ -15,6 +15,7 @@ body{
 	color: #D8000C;
 	padding-top: 10px;
 	 text-align:center;
+	 font-size:14px;
 }
 
 
@@ -27,10 +28,16 @@ body{
   	 padding: 10px 20px 10px 20px; 
   	 border:1px solid white;
 }
+
+.new_employee{
+	display:table-row;
+}
 label,input{
 	font-size: 20px;
-	display: table-row;
+	display:table-cell;
 }
+
+
 .submit{
 	padding-top: 5px;
 }
@@ -113,32 +120,28 @@ p{
 .tasks{
 	border-collapse:collapse;
 	text-align:center;
+
+	tr, td{
+		border:3px solid yellow;
+		background:orange;
+		height:50px;
+	}
+	.id_task{
+		height:50px;
+	}
+	.nazwa{
+		with:300px;
+	}
+	.opis{
+		width:300px;
+		overflow: break-word;
+		text-align:left;
+	}
+	.opcje{
+		width:200px;
+	}
 }
-tr, td{
-	border:3px solid yellow;
-	background:orange;
-	height:50px;
-}
-.id_task{
-	height:50px;
-}
-.nazwa{
-	with:300px;
-}
-.opis{
-	width:300px;
-	overflow: break-word;
-	text-align:left;
-}
-.opcje{
-	width:200px;
-}
-.team{
-	width:200px;
-}
-.projekt{
-	width:250px;
-}
+
 h3{
 	float:center;
 }
@@ -150,11 +153,27 @@ th{
 .projects{
 	border-collapse:collapse;
 	text-align:center;
+	tr, td{
+		border:3px solid yellow;
+		background:orange;
+		height:50px;
+	}
+	.team{
+		width:200px;
+	}
+	.projekt{
+		width:250px;
+	}
+	.czlonkowie{
+		width:300px;
+		font-size:15px;
+	}
 }
 
-.czlonkowie{
-	width:300px;
-	font-size:15px;
+.new_employee{
+	
+
+
 }
 
 .name_surname{

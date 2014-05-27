@@ -13,6 +13,7 @@ body {
   color: #D8000C;
   padding-top: 10px;
   text-align: center;
+  font-size: 14px;
 }
 .login_form {
   display: table;
@@ -23,10 +24,13 @@ body {
   padding: 10px 20px 10px 20px;
   border: 1px solid white;
 }
+.new_employee {
+  display: table-row;
+}
 label,
 input {
   font-size: 20px;
-  display: table-row;
+  display: table-cell;
 }
 .submit {
   padding-top: 5px;
@@ -103,31 +107,25 @@ p {
   border-collapse: collapse;
   text-align: center;
 }
-tr,
-td {
+.tasks tr,
+.tasks td {
   border: 3px solid yellow;
   background: orange;
   height: 50px;
 }
-.id_task {
+.tasks .id_task {
   height: 50px;
 }
-.nazwa {
+.tasks .nazwa {
   with: 300px;
 }
-.opis {
+.tasks .opis {
   width: 300px;
   overflow: break-word;
   text-align: left;
 }
-.opcje {
+.tasks .opcje {
   width: 200px;
-}
-.team {
-  width: 200px;
-}
-.projekt {
-  width: 250px;
 }
 h3 {
   float: center;
@@ -141,7 +139,19 @@ th {
   border-collapse: collapse;
   text-align: center;
 }
-.czlonkowie {
+.projects tr,
+.projects td {
+  border: 3px solid yellow;
+  background: orange;
+  height: 50px;
+}
+.projects .team {
+  width: 200px;
+}
+.projects .projekt {
+  width: 250px;
+}
+.projects .czlonkowie {
   width: 300px;
   font-size: 15px;
 }

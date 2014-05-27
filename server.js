@@ -128,10 +128,10 @@ app.get('/add_employee', function (req, res) {
 
 
 app.get('/page_tasks', function (req, res) {
-  if(req.user && req.user.role === 'user' || req.user.role === 'admin'){
+  if(req.user && req.user.role === 'admin'){
     return res.render('task/tasks.ejs');
   }else{
-     return res.render('public/login.ejs',{error:""});
+     return res.redirect('public/login.ejs',{error:""});
   }
 });
 
@@ -158,17 +158,53 @@ app.get('/employees_list', function (req, res) {
   }
 });
 
-app.get('/new_task', function (req, res) {
+app.get('/employees', function (req, res) {
   if(req.user && req.user.role === 'admin'){
-    return res.render('task/new_task.ejs');
+     client = mysql.createConnection(sqlInfo);
+    client.query('SELECT name,surname FROM Employee WHERE role=\'user\';',function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+       return res.send(rows);  
+    });
   }else{
      return res.render('public/login.ejs',{error:""});
   }
 });
+
+app.get('/new_task', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+    return res.render('task/new_task.ejs');
+  }else{
+     return res.send('public/login.ejs',{error:""});
+  }
+});
+
+app.post('/add_employee', function (req, res) {
+  console.log(req.body);
+  if(req.user && req.user.role === 'admin'){
+      var data = req.body;
+      data['role'] = 'user';
+      delete data['confirm_password'];
+
+      addEmployee(data);
+      return res.redirect('/employees_list');
+   }else{
+      return res.render('public/login.ejs',{error:""});
+   }
+});
+
 /////////////////////database queriies/////////////////////////////
 
+var addEmployee = function(data) {
+    client = mysql.createConnection(sqlInfo);
+    var sql = client.query('INSERT INTO Employee SET ? ;',data,function (err,rows){
 
-//TODO: zapytania projekt
+    if(err){
+      console.log(err);           
+    }
+  });
+};
 
 server = http.createServer(app);
 
