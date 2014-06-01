@@ -35,22 +35,9 @@ $( document ).ready(function() {
       $.get( "/all_projects", function( data ) {
          $( ".content" ).html( data );
     });
-       $.ajax({
-          url: "/projects",
-          dataType: 'json',
-          success: function(data)
-          {
-            if(data){    
-
-              $(".projects").find("tr:gt(0)").remove();
-
-              for(var i = 0 ; i < data.length ; i++){
-                $(".projects").append("<tr id=\'"+data[i].id_project+"\'><td class='nazwa'>"+data[i].name+"</td><td class='opcje'><a href=\'#\'><button id=\'details\' class=\'button_details'\ type=\'button\'>Szczegóły</button></a><a href=\'#\'><button id=\'delete\' class=\'button_delete'\ type=\'button\'>Usuń</button></a></td></tr>");
-              }   
-            }
-          }
-      });
+       
   });
+
      $("#new_project").click(function(event) {
       $.get( "/new_project", function( data ) {
          $( ".content" ).html( data );

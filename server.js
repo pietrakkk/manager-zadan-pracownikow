@@ -53,6 +53,7 @@ passport.use(new LocalStrategy(
                 role: user.role
             })
       });
+      client.end();
     }
 ));
 app.use(express.cookieParser());
@@ -62,7 +63,7 @@ app.use(express.session({
     key: sessionKey,
     secret: sessionSecret
 }));
-app.use(express.json());4
+app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));
@@ -140,6 +141,50 @@ app.get('/all_projects', function (req, res) {
      return res.render('public/login.ejs',{error:""});
   }
 });
+
+app.get('/project_details', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+    return res.render('projects/details.ejs');
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+app.post('/project_by_id', function (req, res) {
+  var id_project = req.body.id_project;
+  if(req.user && req.user.role === 'admin'){
+      client = mysql.createConnection(sqlInfo);
+      client.query('SELECT id_project,name,description FROM Project WHERE id_project=\''+id_project+'\';',function (err,rows){
+         client.query('SELECT id_employee FROM ProjectEmployee WHERE id_project=\''+id_project+'\';',function (err,employee_rows){
+              var data = {
+                employee_data: rows,
+                employee_rows:employee_rows
+              };
+        if(err){
+          console.log(err);           
+        }
+        res.send(data);
+      });
+    });
+    // client.end();
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+app.post('/employee_by_id', function (req, res) {
+  var id_employee = req.body.id_employee;
+  if(req.user && req.user.role === 'admin'){
+      client = mysql.createConnection(sqlInfo);
+      client.query('SELECT name,surname FROM Employee WHERE id_employee=\''+id_employee+'\';',function (err,rows){
+        res.send(rows[0]);
+      });
+      client.end();
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
 app.get('/new_project', function (req, res) {
   if(req.user && req.user.role === 'admin'){
     return res.render('projects/new.ejs');
@@ -165,6 +210,7 @@ app.get('/employees', function (req, res) {
     }
        return res.send(rows);  
     });
+    client.end();
   }else{
      return res.render('public/login.ejs',{error:""});
   }
@@ -212,6 +258,7 @@ app.post('/check_username', function (req, res) {
        return res.send(false);  
     }
     });
+    client.end();
   }else{
      return res.render('public/login.ejs',{error:""});
   }
@@ -237,6 +284,7 @@ app.post('/check_projectname', function (req, res) {
        return res.send(false);  
     }
     });
+    client.end();
   }else{
      return res.render('public/login.ejs',{error:""});
   }
@@ -265,6 +313,7 @@ app.get('/projects', function (req, res) {
             }
             return res.send(employee_rows);  
          });
+         client.end();
   }else{
        return res.render('public/login.ejs',{error:""});
   }
@@ -280,6 +329,7 @@ var addEmployee = function(data) {
       console.log(err);           
     }
   });
+    client.end();
 };
 
 
@@ -305,6 +355,7 @@ var addProject = function(data,team) {
               });
           }
       });
+      client.end();
     }
   }
 });

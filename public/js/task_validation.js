@@ -1,6 +1,5 @@
 $( document ).ready(function() {
 	
-
 	$('#submit_task').click(function(event) {
      		$('.error').empty();
      		var isError = false,
