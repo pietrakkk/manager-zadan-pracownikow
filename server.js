@@ -255,6 +255,21 @@ app.post('/add_project', function (req, res) {
    }
 });
 
+//rozkminić jak to rozwiązać
+app.get('/projects', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+       client = mysql.createConnection(sqlInfo);
+         client.query('SELECT id_project,name,description FROM  Project;',function (err,employee_rows){
+            if(err){
+              console.log(err);           
+            }
+            return res.send(employee_rows);  
+         });
+  }else{
+       return res.render('public/login.ejs',{error:""});
+  }
+});
+
 /////////////////////database queriies/////////////////////////////
 
 var addEmployee = function(data) {
@@ -267,13 +282,14 @@ var addEmployee = function(data) {
   });
 };
 
+
 var addProject = function(data,team) {
     client = mysql.createConnection(sqlInfo);
     var sql = client.query('INSERT INTO Project SET ? ;',data,function (err,rows){
     if(err){
       console.log(err);           
     }else{
-      if(team.length > 0){
+      if(team && team.length > 0){
          client.query('SELECT id_project FROM Project WHERE name=\''+data['name']+"\';",function (err,rows){
           var id_project = rows[0].id_project;
           var tempJSON;
@@ -293,7 +309,6 @@ var addProject = function(data,team) {
   }
 });
 };
-
 
 server = http.createServer(app);
 

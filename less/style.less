@@ -1,11 +1,11 @@
 body{
 	font-family: arial;
 	width:100%;
-	background: #62B1D0;
+	background: #C8DCF0;
 	padding-bottom:20px;
 }
 .body{
-	width:1200px;
+	width:80%;
 	margin:0 auto;
 }
 
@@ -35,7 +35,6 @@ label,input{
 	
 }
 
-
 .submit{
 	padding-top: 5px;
 }
@@ -51,8 +50,7 @@ label,input{
 .logged_info{
 	 width:100%;
 	 text-align: center;
-	 font-size: 20px;
-	 background:orange;
+	 background:#FFA340;
 	 padding-top:5px;
 	 padding-bottom:5px;
 }
@@ -73,7 +71,7 @@ ul li {
 	padding-bottom:20px;
 }
 .title{
-	width: 220px;
+	width: 97%;
 	height: 20px;
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -86,16 +84,16 @@ li{
 	height: 15px;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	background: #3AA6D0;
+	background: #62B1D0;
 	text-align: center;
 	font-size: 16px;
-	margin-left:-30px;
-	border: 2px solid #62B1D0
+	margin-left:-35px;
+	border: 2px solid #C8DCF0
 }
 li:hover
 { 
 	background-color:lightskyblue;
-	margin-left:-25px;
+	margin-left:-20px;
 }
 
 ul{
@@ -122,21 +120,28 @@ p{
 	tr, td{
 		border:3px solid #04859D;
 		background:#62B1D0;
-		height:50px;
+		min-height:50px;
 	}
 	.id_task{
 		height:50px;
-	}
-	.nazwa{
-		with:300px;
+		width:80px;
 	}
 	.opis{
 		width:300px;
 		overflow: break-word;
 		text-align:left;
 	}
+	.project{
+		width:300px;
+	}
 	.opcje{
-		width:200px;
+		width:100px;
+	}
+	.status{
+		width:100px;
+	}
+	button{
+		width:100%;
 	}
 }
 
@@ -154,18 +159,19 @@ th{
 	tr, td{
 		border:3px solid #04859D;
 		background:#62B1D0;
-		height:50px;
+		height:30px;
 	}
-	.team{
-		width:200px;
+	.nazwa{
+		width:70%;
 	}
-	.projekt{
-		width:250px;
+	.opcje{
+		width:30%;
 	}
-	.czlonkowie{
-		width:300px;
-		font-size:15px;
+	button{
+		width:50%;
+		display:inline;
 	}
+	
 }
 
 .employees{
@@ -175,13 +181,17 @@ th{
 	tr, td{
 		border:3px solid #04859D;
 		background:#62B1D0;
-		height:50px;
+		height:30px;
 	}
 	.name_surname{
 		width:70%;
 	}
 	.options{
 		with:30%;
+	}
+
+	button{
+		width:50%;
 	}
 }
 
@@ -193,6 +203,13 @@ th{
 		
 		font-size:18px;
 	}
+	tr{
+		padding:top:10px;
+	}
+}
+
+.new_task{
+	
 }
 
 .new_project{
@@ -204,3 +221,75 @@ th{
 	}
 }
 
+.button_edit{
+	font-family: "Myriad Pro";
+    font-size: 13px;
+    color: white;
+    background: #8fd163;
+    border: 1px solid #8fd163;
+    -moz-border-radius:6px; 
+    -webkit-border-radius:6px; 
+    -khtml-border-radius:6px; 
+    border-radius:6px;   
+    padding: 5px 5px 5px 5px; 
+    margin: 0 auto;
+    width:100%;
+}
+
+.button_accept{
+	font-family: "Myriad Pro";
+    font-size: 13px;
+    color: white;
+    background: #8fd163;
+    border: 1px solid #6ab83d;
+    -moz-border-radius:6px; 
+    -webkit-border-radius:6px; 
+    -khtml-border-radius:6px; 
+    border-radius:6px;   
+    padding: 5px 5px 5px 5px; 
+    margin: 0 auto;
+    width:100%;
+}
+.button_warning{
+	font-family: "Myriad Pro";
+    font-size: 13px;
+    color: white;
+    background: orange;
+    border: 1px solid orange;
+    -moz-border-radius:6px; 
+    -webkit-border-radius:6px; 
+    -khtml-border-radius:6px; 
+    border-radius:6px; 
+    padding: 5px 5px 5px 5px; 
+    margin: 0 auto;
+}
+
+.button_delete{
+	font-family: "Myriad Pro";
+    font-size: 13px;
+    color: white;
+    background: red;
+    border: 1px solid red;
+    -moz-border-radius:6px; 
+    -webkit-border-radius:6px; 
+    -khtml-border-radius:6px; 
+    border-radius:6px; 
+    padding: 5px 5px 5px 5px; 
+    margin: 0 auto;
+}
+.button_details{
+	font-family: "Myriad Pro";
+    font-size: 13px;
+    color: white;
+    background: #013D78;
+    border: 1px solid #013D78;
+    -moz-border-radius:6px; 
+    -webkit-border-radius:6px; 
+    -khtml-border-radius:6px; 
+    border-radius:6px; 
+    padding: 5px 5px 5px 5px; 
+    margin: 0 auto;
+}
+a{
+	text-decoration:none;	
+}

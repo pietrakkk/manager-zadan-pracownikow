@@ -1,19 +1,31 @@
-	<h2>Nowe zadanie</h2>
+<script type="text/javascript" src='js/task_validation.js'></script>
+<p class='table_title'>Nowe zadanie</p>
+		<div class="new_task">
+			<form action="/add_task" method="post">
+				<p class='error'></p>
 			<form action="/add_project" method="post">
-				<div class="opis">
-					<label>Opis:</label>
-					<textarea class='description' rows="6" cols="60"/>
-				</div>
-				<div class="team">
-					<label>Pracownik:</label>
-					<select class='task_reciever'>
-  						<option value="volvo">Władek Radgowski</option>
- 						<option value="volvo">Władek Radgowski</option>
-  						<option value="volvo">Władek Radgowski</option>
-  						<option value="volvo">Władek Radgowski</option>
-					</select>
-				</div>
-    			<div class="submit">
-    				<input id="send_login" type="submit" value="Zatwierdź!"/>
-    			</div>	
+				<table class="task_form">
+					<tr>
+						<td>Projekt:</td>
+						<td>
+							<select class='project_select'>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Pracownik:</td>
+						<td>
+							<select class='reciever_select'>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Opis:</td>
+						<td><textarea id="description" class='description' rows="6" cols="60"/></td>
+					</tr>
+					<tr>
+						<td><input id="submit_task" type="submit" value="Zatwierdź!"/></td>
+					</tr>
+				</table>
 			</form>
+			</div>

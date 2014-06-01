@@ -14,16 +14,19 @@
 		<div class="login_form">
 			<h3>Panel logowania</h3>
 			<form action="/login" method="post">
-				<div class="username">
-					<label>Użytkownik:</label>
-					<input type="text" id="username" name="username"/><br/></div>
-    			<div class="password">
-    				<label>Hasło:</label>
-    				<input type="password" id="password" name="password"/>
-    			</div>
-    			<div class="submit">
-    				<input id="send_login" type="submit" value="Zaloguj"/>
-    			</div>	
+				<table>
+					<tr>
+						<td><label>Użytkownik:</label></td>
+						<td><input type="text" id="username" name="username"/></td>
+					</tr>
+					<tr>
+						<td><label>Hasło:</label></td>
+						<td><input type="password" id="password" name="password"/></td>
+					</tr>
+					<tr>
+						<td><input id="send_login" type="submit" value="Zaloguj"/></td>
+					</tr>
+ 				</table>	
 			</form>
 		</div>
 		<div class="error">
