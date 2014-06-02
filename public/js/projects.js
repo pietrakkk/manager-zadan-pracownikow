@@ -33,9 +33,11 @@ $( document ).ready(function() {
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify({id_project: id}),
+            async:false,
             success: function (response) {
             	$("#name").append(response.employee_data[0].name);
             	$("#desc").append(response.employee_data[0].description);
+              $("#add_to_project").append("<button id=\'delete_employee\' empl=\'"+temp+"\' class=\'button_edit'\ onclick=\'clickBut("+temp+")\' type=\'button\'>Dodaj pracownika</button>");
 
             	for(var i = 0 ; i < response.employee_rows.length; i++){
             		var temp = response.employee_rows[i].id_employee;
@@ -45,20 +47,38 @@ $( document ).ready(function() {
             			dataType: "json",
             			contentType: "application/json",
             			data: JSON.stringify({id_employee: temp}),
+                  async:false,
             			success: function (response) {
             				$("#team").append(response.name+" "+response.surname+"<br/>");
-            				$("#options").append("<button id=\'delete_employee\' empl=\'"+temp+"\' class=\'button_delete'\ type=\'button\'>Usuń</button><br/>");
-            			}  
+            				$("#options").append("<button id=\'delete_employee\' empl=\'"+temp+"\' class=\'button_delete'\ onclick=\'clickBut("+temp+")\' type=\'button\'>Usuń</button><br/>");
+            
+                  }  
         			});
             	}
             }  
-        });
-       
-    });			    
+        }); 
+    });		
+
  });
-	$("#delete_employee").click(function(event) {
-			var id_empl = $(this).attr("empl");
-			alert(id_empl);
-	})
-	
+
  });
+ function  clickBut(id) {
+   var conf = confirm("Czy na pewno chcesz usunąć osobę z projektu?");
+   
+    if (conf === true) {
+      $.ajax({
+                  type: "POST",
+                  url: "/delete_from_project",
+                  dataType: "json",
+                  contentType: "application/json",
+                  data: JSON.stringify({id_employee: id}),
+                  success: function (response) {
+                    if(true){
+                       alert("Operacja zakończona pomyślnie!");
+                    }
+                   }
+              });
+    }
+  }
+
+  
