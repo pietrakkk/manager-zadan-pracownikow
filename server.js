@@ -238,6 +238,27 @@ app.post('/add_employee', function (req, res) {
    }
 });
 
+//usuwa pracownika z danego projektu i usuwa id pracownika z zadania
+app.post('/delete_from_project', function (req, res) {
+  var id_employee = req.body.id_employee; 
+  if(req.user && req.user.role === 'admin'){
+     deleteEmployeeFromProject(id_employee);
+      return res.send(true);
+   }else{
+      return res.render('public/login.ejs',{error:""});
+   }
+});
+
+//dodaje pracownika do projektu
+app.post('/add_to_project', function (req, res) {
+
+  if(req.user && req.user.role === 'admin'){
+     addEmployeeToProject(req.body)
+      return res.send(true);
+   }else{
+      return res.render('public/login.ejs',{error:""});
+   }
+});
 
 app.post('/check_username', function (req, res) {
   var username = req.body.username;
@@ -303,7 +324,16 @@ app.post('/add_project', function (req, res) {
    }
 });
 
-//rozkminić jak to rozwiązać
+app.post('/delete_project', function (req, res) {
+
+  if(req.user && req.user.role === 'admin'){
+    deleteProject(req.body.id_project);
+    res.send(true);
+   }else{
+      return res.render('public/login.ejs',{error:""});
+   }
+});
+
 app.get('/projects', function (req, res) {
   if(req.user && req.user.role === 'admin'){
        client = mysql.createConnection(sqlInfo);
@@ -355,11 +385,54 @@ var addProject = function(data,team) {
               });
           }
       });
-      client.end();
+     // client.end();
     }
   }
 });
 };
+
+var deleteEmployeeFromProject = function(id_employee) {
+   client = mysql.createConnection(sqlInfo);
+   client.query('DELETE FROM ProjectEmployee WHERE id_employee='+id_employee+';',function (err,rows){
+                 if(err){
+                    console.log(err);           
+                  }
+
+              });
+    client.query('UPDATE Tasks SET id_employee=null WHERE id_employee='+id_employee+';',function (err,rows){
+                 if(err){
+                    console.log(err);           
+                  }
+              });
+  client.end();
+}
+
+var deleteProject = function(id_project) {
+    client = mysql.createConnection(sqlInfo);
+    var sql = client.query('DELETE FROM Project WHERE id_project='+id_project+';',function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+  var sql = client.query('DELETE FROM ProjectEmployee WHERE id_project='+id_project+';',function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+    client.end();
+}
+
+
+var addEmployeeToProject = function(data) {
+   client = mysql.createConnection(sqlInfo);
+    var sql = client.query('INSERT INTO ProjectEmployee SET ?;',data,function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+    client.end();
+}
+
 
 server = http.createServer(app);
 
