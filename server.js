@@ -26,15 +26,24 @@ server.listen(3000, function () {
 
 });
 
+var tempUsername;
+
 var io = require('socket.io').listen(server);
 
+
+
 io.sockets.on('connection', function(socket){
+   var data = {
+      username: socket.manager.handshaken[socket.id].query.username,
+      id_socket:socket.id
+   }
+   insertSocketConnection(data);
+
     console.log("Połączono z socket IO");
-  //  socket.emit('message', {'message': 'hello world'});
-
-
+    
     socket.on('add_task', function (data) {
-        socket.broadcast.emit('doratlo','Przykładowa wiadomość');    
+      // console.log(tempUsername);
+       // socket.broadcast.emit('task','Przykładowa wiadomość');    
     });
 });
 
@@ -107,6 +116,16 @@ app.get('/', function (req, res) {
   }
   if(req.user && req.user.role === 'user'){
     return res.render('user/user.ejs', {username: req.user.username});
+  }
+});
+
+app.post('/current_user', function (req, res) {
+  if(!req.user){
+    res.redirect('public/login.ejs');
+  }
+  // if(req.user && ( req.user.role === 'admin' || req.user.role === 'user' ) ){
+    if(req.user &&  (req.user.role === 'admin' || req.user.role === 'user')  ){
+    return res.send({username: req.user.username});
   }
 });
 
@@ -312,7 +331,6 @@ app.post('/add_employee', function (req, res) {
       var data = req.body;
       data['role'] = 'user';
       delete data['confirm_password'];
-
       addEmployee(data);
       return res.redirect('/');
    }else{
@@ -431,6 +449,17 @@ app.post('/delete_project', function (req, res) {
    }
 });
 
+app.post('/add_task', function (req, res) {
+  console.log(req.body);
+  if(req.user && req.user.role === 'admin'){
+    
+    addTask(req.body);
+   return res.redirect('/');
+   }else{
+      return res.render('public/login.ejs',{error:""});
+   }
+});
+
 //przesyła liste obecnych projektów
 app.get('/projects', function (req, res) {
   if(req.user && req.user.role === 'admin'){
@@ -460,6 +489,15 @@ var addEmployee = function(data) {
     client.end();
 };
 
+var addTask = function(data) {
+    client = mysql.createConnection(sqlInfo);
+    var sql = client.query('INSERT INTO Tasks SET ? ;',data,function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+    client.end();
+};
 
 var addProject = function(data,team) {
     client = mysql.createConnection(sqlInfo);
@@ -556,6 +594,16 @@ var deleteEmployee = function(id_employee){
     }
   });
   client.query('UPDATE Tasks SET id_employee=null WHERE id_employee='+id_employee+';',function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+    client.end();
+}
+
+var insertSocketConnection = function(data) {
+   client = mysql.createConnection(sqlInfo);
+    var sql = client.query('INSERT INTO SocketStore SET ?;',data,function (err,rows){
     if(err){
       console.log(err);           
     }

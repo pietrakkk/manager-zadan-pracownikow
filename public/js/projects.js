@@ -13,8 +13,7 @@ $( document ).ready(function() {
               for(var i = 0 ; i < data.length ; i++){
                 $(".projects").append("<tr id=\'"+data[i].id_project+"\'><td class='nazwa'>"+data[i].name+"</td><td class='opcje'><button id=\"project_details\" project=\""+data[i].id_project+"\" class=\'button_details'\ type=\'button\'>Szczegóły</button><button id=\'delete_project\' class=\'button_delete' project=\""+data[i].id_project+"\" \ type=\'button\'>Usuń</button></td></tr>");
               }   
-            }
-          	
+            }   	
           }
       });	
 	};

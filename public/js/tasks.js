@@ -1,7 +1,22 @@
 $( document ).ready(function() {
 
-	var socket = io.connect('http://' + location.host);
-	 
+var username =""; 
+	
+	var loadUsername = function() {
+     $.ajax({
+          url: "/current_user",
+          type: "POST",
+          dataType: 'json',
+          async:false,
+          success: function(data){
+           username = data.username;
+          }
+    });
+  }
+  loadUsername();
+  alert(username);
+
+  var socket = io.connect('http://' + location.host,{query: "username="+username});
 
 	var loadTasksList = function(argument) {
 		  $.ajax({

@@ -8,22 +8,22 @@
 					<tr>
 						<td>Projekt:</td>
 						<td>
-							<select id="project_select" class='project_select'>
-								<option value="-1">---wybierz pracownika---</option>
+							<select id="project_select" name="id_project" class='project_select'>
+								<option value="-1">---wybierz projekt---</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<td>Pracownik:</td>
 						<td>
-							<select class='reciever_select'>
+							<select id="reciever_select" class='reciever_select' name="id_employee">
 								<option value="-1">---wybierz pracownika---</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<td>Opis:</td>
-						<td><textarea id="description" class='description' rows="6" cols="60"/></td>
+						<td><textarea id="description" name="description" class='description' rows="6" cols="60"/></td>
 					</tr>
 					<tr>
 						<td><input id="submit_task" type="submit" value="Zatwierdź!"/></td>

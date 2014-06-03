@@ -1,17 +1,33 @@
 $( document ).ready(function() {
 	$('#submit_task').click(function(event) {
-     		$('.error').empty();
-     		var isError = false,
-     			description = $('#description').val();
-     		
-     
+
+          var selectedProject = $("#project_select option:selected").val(),
+               selectedEmployee = $("#reciever_select option:selected").val(),
+               description = $('#description').val(),
+               isError = false;
+        
+          $('.error').empty();
+          
+              	
+
+           if(selectedEmployee === '-1'){
+               isError = true;
+               $('.error').append("Wybierz pracownika<br/>");
+          }
      	if(description === ''){
-     		$('.error').append("Opis nie może być pusty");
      		isError = true;
+              $('.error').append("Opis nie może być pusty<br/>");
      	}
+          if(selectedProject === '-1'){
+               isError = true;
+              $('.error').append("Wybierz projekt<br/>");
+          }
+          
      	if(isError){
-    		event.preventDefault();
-     	}
+    		    event.preventDefault();
+     	}else{
+               alert("Dodano zadanie!");
+          }
      });
 
 
@@ -46,11 +62,10 @@ $( document ).ready(function() {
    }
       $(".project_select").change(function() {
           var selectedProject = $(this).val();
+           $(".reciever_select").empty();          
            if(selectedProject === '-1'){
-               $(".reciever_select").empty();
-               $(".reciever_select").append("<option value=\"-1\">---wybierz pracownika---</option>");
            }else{
-               $(".reciever_select").empty();
+                $(".reciever_select").append("<option value=\"-1\">---wybierz pracownika---</option>");
                loadEmployeesList(selectedProject);
            }
       });
