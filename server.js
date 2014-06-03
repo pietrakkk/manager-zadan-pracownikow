@@ -17,7 +17,26 @@ var sqlInfo = {
 var sessionSecret = 'wielkiSekret44';
 var sessionKey = 'connect.sid';
 var server;
-var sio;
+
+server = http.createServer(app);
+
+server.listen(3000, function () {
+    console.log('Serwer pod adresem http://localhost:3000/');
+
+
+});
+
+var io = require('socket.io').listen(server);
+
+io.sockets.on('connection', function(socket){
+    console.log("Połączono z socket IO");
+  //  socket.emit('message', {'message': 'hello world'});
+
+
+    socket.on('add_task', function (data) {
+        socket.broadcast.emit('doratlo','Przykładowa wiadomość');    
+    });
+});
 
 ////////////////////logowanie/////////////////////////////////////////
 passport.serializeUser(function (user, done) {
@@ -87,7 +106,7 @@ app.get('/', function (req, res) {
     return res.render('admin/admin.ejs',{username: req.user.username});
   }
   if(req.user && req.user.role === 'user'){
-    return res.render('employee/user.ejs', {username: req.user.username});
+    return res.render('user/user.ejs', {username: req.user.username});
   }
 });
 
@@ -100,16 +119,45 @@ app.get('/logout', function (req, res) {
     return res.render('public/login.ejs',{error:""});
 });
 
+
+//wyświetla zadania w panelu ADMIN
 app.get('/tasks', function (req, res) {
-  if(req.user && req.user.role === 'user' || req.user.role === 'admin'){
+  if(req.user && req.user.role === 'admin'){
     return res.send({tasks:"feagareg"});
   }else{
      return res.render('public/login.ejs',{error:""});
   }
 });
 
+//wyświetla zadania w panelu USER
+app.get('/user_tasks', function (req, res) {
+  if(req.user && req.user.role === 'user'){
+    return res.send({tasks:"feagareg"});
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
 
-//przesyła widok nowego pracownika
+//przesyła widok zadań do panelu ADMIN
+app.get('/tasks_for_admin', function (req, res) {
+  if(req.user && req.user.role === 'user' || req.user.role === 'admin'){
+      res.render('task/tasks.ejs',{error:""});
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+//przesyła widok zadań do panelu USER
+app.get('/tasks_for_user', function (req, res) {
+  if(req.user && req.user.role === 'user'){
+      res.render('user/user_tasks.ejs',{error:""});
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+
+//przesyła widok nowego pracownika ADMIN
 app.get('/new_employee', function (req, res) {
   if(req.user && req.user.role === 'admin'){
       return res.render('employee/new_employee.ejs');
@@ -187,15 +235,30 @@ app.post('/project_by_id', function (req, res) {
   }
 });
 
-//pobiera pracownika według jego id
-app.post('/employee_by_id', function (req, res) {
+//pobiera pracownika według id_project
+app.post('/employee_by_id_project', function (req, res) {
   console.log(req.body);
-  var id = req.body.id_employee;
+  var id = req.body.id_project;
 
   if(req.user && req.user.role === 'admin'){
       client = mysql.createConnection(sqlInfo);
+      client.query('SELECT id_employee FROM ProjectEmployee WHERE id_project=\''+id+'\';',function (err,rows){
+
+        res.send(rows);
+      });
+      client.end();
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
+//pobiera pracownika według jego id
+app.post('/employee_by_id', function (req, res) {
+  var id = req.body.id_employee;
+  console.log(id);
+  if(req.user && req.user.role === 'admin'){
+      client = mysql.createConnection(sqlInfo);
       client.query('SELECT id_employee,username,name,surname FROM Employee WHERE id_employee=\''+id+'\';',function (err,rows){
-        console.log(rows);
         res.send(rows[0]);
       });
       client.end();
@@ -499,9 +562,3 @@ var deleteEmployee = function(id_employee){
   });
     client.end();
 }
-
-server = http.createServer(app);
-
-server.listen(3000, function () {
-    console.log('Serwer pod adresem http://localhost:3000/');
-});

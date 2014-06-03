@@ -131,6 +131,8 @@ function  addEmployee(id_project) {
       $("#add_to").css("display","none");
       $("#add_to_project").append("<button id='confirm_button' onclick=\'confirmEmployee("+id_project+")\' class=\'button_add'\ >Zatwierdź</button>")
 }
+
+
 function confirmEmployee(id_project){
   var selectedEmployees = $("#employee_select option:selected");
 
