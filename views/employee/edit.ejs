@@ -1,0 +1,28 @@
+<script type="text/javascript" src='js/employee_edit_validation.js'></script>
+<p class='table_title'>Edycja pracownika</p>
+		<div class="new_employee">
+		<form id="edit_employee_confirm" action="/edit_employee_confirm" method="post">
+		<p class='error'></p>
+		<input type="hidden" id="id_employee" name="id_employee" value=""/>	
+		<table class="employee_form">
+			<tr>
+				<td><label for="name">Imię:</label></td>
+				<td><input type="text" id="name" name="name" value=""/></td>
+				<td><label class="error" id="name_error"/></td>
+			</tr>
+			<tr>
+				<td><label for="surname">Nazwisko:</label></td>
+				<td><input type="text" id="surname" name="surname"/></td>
+				<td><label class="error" id="surname_error"/></td>
+			</tr>
+			<tr>
+				<td><label>Nazwa użytkownika:</label></td>
+				<td><input type="text" id="username" name="username"/></td>
+				<td><label class="error" id="username_error"/></td>
+			</tr>
+			<tr>
+				<td><input id="confirm_edit_employee" type="submit" value="Zatwierdź!"/></td>
+			</tr>
+		</table>
+			</form>
+		</div>

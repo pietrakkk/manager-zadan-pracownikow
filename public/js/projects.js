@@ -33,7 +33,7 @@ $( document ).ready(function() {
                   data: JSON.stringify({id_project: id_project}),
                   success: function (response) {
                     alert("Usunięto!");
-                    //TODO: zrobić usuwanie z tabeli
+                    $("tr[id="+id_project+"]").remove();
                    }
               });
       }
@@ -122,7 +122,6 @@ $( document ).ready(function() {
                     }
                    }
               });
-      //dodawanie do listy dodawania
     }
   }
 

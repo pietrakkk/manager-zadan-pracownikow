@@ -1,12 +1,12 @@
 <script type="text/javascript" src='js/employee_validation.js'></script>
 <p class='table_title'>Nowy pracownik</p>
 		<div class="new_employee">
-			<form action="/add_employee" method="post">
+			<form id="add_employee" action="/add_employee" method="post">
 				<p class='error'></p>
 		<table class="employee_form">
 			<tr>
 				<td><label for="name">Imię:</label></td>
-				<td><input type="text" id="name" name="name"/></td>
+				<td><input type="text" id="name" name="name" value=""/></td>
 				<td><label class="error" id="name_error"/></td>
 			</tr>
 			<tr>
@@ -19,12 +19,12 @@
 				<td><input type="text" id="username" name="username"/></td>
 				<td><label class="error" id="username_error"/></td>
 			</tr>
-			<tr>
+			<tr id="pass">
 				<td><label>Hasło:</label></td>
 				<td><input type="password" id="password" name="password"/></td>
 				<td><label class="error" id="password_error"></label></td>
 			</tr>
-			<tr>
+			<tr id="conf_pass">
 				<td><label>Potwierdź:</label></td>
 				<td><input type="password" id="confirm_password"  name="confirm_password"/></td>
 				<td><label class="error" id="confirm_password_error"></label></td>

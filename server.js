@@ -108,6 +108,8 @@ app.get('/tasks', function (req, res) {
   }
 });
 
+
+//przesyła widok nowego pracownika
 app.get('/new_employee', function (req, res) {
   if(req.user && req.user.role === 'admin'){
       return res.render('employee/new_employee.ejs');
@@ -116,19 +118,32 @@ app.get('/new_employee', function (req, res) {
   }
 });
 
-app.get('/add_employee', function (req, res) {
+
+//edytuje dane pracownika
+app.post('/edit_employee_confirm', function (req, res) {
+  console.log(req.body);
   if(req.user && req.user.role === 'admin'){
-      //dodawanie pracownika
-      return res.render('employee/new_employee.ejs');
+     editEmployee(req.body);
+     return res.render('admin/admin.ejs',{username: req.user.username});
   }else{
      return res.render('public/login.ejs',{error:""});
   }
 });
 
 
+//zwraca widok zadań
 app.get('/page_tasks', function (req, res) {
   if(req.user && req.user.role === 'admin'){
     return res.render('task/tasks.ejs');
+  }else{
+     return res.redirect('public/login.ejs',{error:""});
+  }
+});
+
+//zwraca widok edycji danych
+app.get('/edit_employee', function (req, res) {
+  if(req.user && req.user.role === 'admin'){
+    return res.render('employee/edit.ejs');
   }else{
      return res.redirect('public/login.ejs',{error:""});
   }
@@ -172,11 +187,15 @@ app.post('/project_by_id', function (req, res) {
   }
 });
 
+//pobiera pracownika według jego id
 app.post('/employee_by_id', function (req, res) {
-  var id_employee = req.body.id_employee;
+  console.log(req.body.id_employee);
+  var id = req.body.id_employee;
+
   if(req.user && req.user.role === 'admin'){
       client = mysql.createConnection(sqlInfo);
-      client.query('SELECT name,surname FROM Employee WHERE id_employee=\''+id_employee+'\';',function (err,rows){
+      client.query('SELECT id_employee,username,name,surname FROM Employee WHERE id_employee=\''+id+'\';',function (err,rows){
+        console.log(rows);
         res.send(rows[0]);
       });
       client.end();
@@ -238,6 +257,17 @@ app.post('/add_employee', function (req, res) {
    }
 });
 
+//usuwa pracownika z bazy danych i ustawia status zadan jako nieprzydzielony
+app.post('/delete_employee', function (req, res) {
+  console.log(req.body);
+  if(req.user && req.user.role === 'admin'){
+      deleteEmployee(req.body.id_employee);
+      res.send(true);
+   }else{
+      return res.render('public/login.ejs',{error:""});
+   }
+});
+
 //usuwa pracownika z danego projektu i usuwa id pracownika z zadania
 app.post('/delete_from_project', function (req, res) {
   var id_employee = req.body.id_employee; 
@@ -260,6 +290,7 @@ app.post('/add_to_project', function (req, res) {
    }
 });
 
+//sprawdza czy użytkownik istnieje w bazie danych
 app.post('/check_username', function (req, res) {
   var username = req.body.username;
   if(req.user && req.user.role === 'admin'){
@@ -285,7 +316,7 @@ app.post('/check_username', function (req, res) {
   }
 });
 
-
+//sprawdza czy podana nazwa projektu nie istnieje w bazie danych
 app.post('/check_projectname', function (req, res) {
   var projectname = req.body.name;
   if(req.user && req.user.role === 'admin'){
@@ -311,6 +342,8 @@ app.post('/check_projectname', function (req, res) {
   }
 });
 
+
+//dodaje nowy projekt do bazy danych
 app.post('/add_project', function (req, res) {
 
   if(req.user && req.user.role === 'admin'){
@@ -324,6 +357,7 @@ app.post('/add_project', function (req, res) {
    }
 });
 
+//usuwa projekt z bazy danych
 app.post('/delete_project', function (req, res) {
 
   if(req.user && req.user.role === 'admin'){
@@ -334,6 +368,7 @@ app.post('/delete_project', function (req, res) {
    }
 });
 
+//przesyła liste obecnych projektów
 app.get('/projects', function (req, res) {
   if(req.user && req.user.role === 'admin'){
        client = mysql.createConnection(sqlInfo);
@@ -419,6 +454,12 @@ var deleteProject = function(id_project) {
       console.log(err);           
     }
   });
+  var sql = client.query('DELETE FROM Tasks WHERE id_project='+id_project+';',function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+
     client.end();
 }
 
@@ -433,6 +474,31 @@ var addEmployeeToProject = function(data) {
     client.end();
 }
 
+
+var editEmployee = function(data) {
+   client = mysql.createConnection(sqlInfo);
+    var sql = client.query('UPDATE Employee SET ? WHERE id_employee=\''+data.id_employee+'\';',data,function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+    client.end();
+}
+
+var deleteEmployee = function(id_employee){
+  client = mysql.createConnection(sqlInfo);
+ var sql = client.query('DELETE FROM Employee WHERE id_employee='+id_employee+';',function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+  client.query('UPDATE Tasks SET id_employee=null WHERE id_employee='+id_employee+';',function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+    client.end();
+}
 
 server = http.createServer(app);
 

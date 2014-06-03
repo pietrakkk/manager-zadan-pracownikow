@@ -1,6 +1,5 @@
 $( document ).ready(function() {
 
-
   var loadTaskList = function() {
         $.get( "/page_tasks", function( data ) {
           $( ".content" ).html( data );
@@ -45,14 +44,8 @@ $( document ).ready(function() {
    });
 
   $("#employees_list").click(function(event) {
-      $.get( "/employees_list", function( data ) {
-         
+      $.get( "/employees_list", function( data ) {       
          $( ".content" ).html( data );
-        $.getJSON( "/employees", function( data ) {
-            for(var i = 0; i < data.length ; i++){
-              $(".employees").append("<tr><td class='name_surname'>"+data[i].name+" "+data[i].surname+"</td><td class='options'><a href=\'#\'><button id=\'edit\' class=\'button_edit'\ type=\'button\'>Edytuj dane</button></a><a href=\'#\'><button id=\'delete\' class=\'button_delete'\ type=\'button\'>Usuń</button></a></td></tr>");
-            }
-          });
       });
    });
    $("#new_task").click(function(event) {
