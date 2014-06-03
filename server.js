@@ -189,7 +189,7 @@ app.post('/project_by_id', function (req, res) {
 
 //pobiera pracownika według jego id
 app.post('/employee_by_id', function (req, res) {
-  console.log(req.body.id_employee);
+  console.log(req.body);
   var id = req.body.id_employee;
 
   if(req.user && req.user.role === 'admin'){

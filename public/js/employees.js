@@ -10,7 +10,7 @@ $( document ).ready(function() {
               $(".employees").find("tr:gt(0)").remove();
 
               for(var i = 0 ; i < data.length ; i++){
- 				$(".employees").append("<tr id=\'"+data[i].id_employee+"\'><td class='name_surname'>"+data[i].name+" "+data[i].surname+"</td><td class='options'><button id=\'edit_employee\' class=\'button_edit'\ type=\'button\'>Edytuj dane</button><button id=\'delete\' employee=\'"+data[i].id_employee+"\' class=\'button_delete'\ type=\'button\'>Usuń</button></td></tr>");              }   
+ 				$(".employees").append("<tr id=\'"+data[i].id_employee+"\'><td class='name_surname'>"+data[i].name+" "+data[i].surname+"</td><td class='options'><button id=\'edit_employee\' employee=\""+data[i].id_employee+"\" class=\'button_edit'\ type=\'button\'>Edytuj dane</button><button id=\'delete\' employee=\'"+data[i].id_employee+"\' class=\'button_delete'\ type=\'button\'>Usuń</button></td></tr>");              }   
             }
           	
           }
@@ -19,7 +19,6 @@ $( document ).ready(function() {
 	loadEmployeesList();
 
 
-	//TODO: jebnąć to 
 	$('.button_delete').click(function() {
 		 var id = $(this).attr("employee");
       var conf = confirm("Czy na pewno chcesz usunąć pracownika? Zadania dostaną status nieprzydzielonych!");
@@ -44,7 +43,7 @@ $( document ).ready(function() {
 	});
 
 	$('.button_edit').click(function(event) {
-		var id = $(this).attr("project");
+		var id = $(this).attr("employee");
 		$.get( "/edit_employee", function( data ) {
          	$( ".content" ).html( data );
 
