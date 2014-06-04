@@ -207,7 +207,7 @@ app.get('/logout', function (req, res) {
 app.post('/admin_tasks', function (req, res) {
   if(req.user && req.user.role === 'admin'){
       client = mysql.createConnection(sqlInfo);
-       client.query('SELECT t.id_task,p.name,t.description,t.status FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project ORDER BY t.id_task DESC;',function (err,rows){
+       client.query('SELECT t.id_task,p.name,t.description,t.status FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project WHERE status!="ZAMKNI?TE" ORDER BY t.id_task DESC;',function (err,rows){
           
           if(err){
             console.log(err);
@@ -225,7 +225,7 @@ app.post('/user_tasks', function (req, res) {
 
   if(req.user && req.user.role === 'user'){
        client = mysql.createConnection(sqlInfo);
-       client.query('SELECT t.id_task,p.name,t.description,t.status FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project WHERE id_employee='+req.body.id_employee+' ORDER BY t.id_task DESC;',function (err,rows){
+       client.query('SELECT t.id_task,p.name,t.description,t.status FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project WHERE id_employee='+req.body.id_employee+' AND status!="ZAMKNI?TE" ORDER BY t.id_task DESC;',function (err,rows){
           if(err){
             console.log(err);
           }
