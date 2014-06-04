@@ -64,6 +64,25 @@ io.sockets.on('connection', function(socket){
      // client.end();
       console.log("Własnie dodałem zadanie");   
     });
+
+    //zatwierdzania zadania i wysyłanie go do użytkownika
+    socket.on("confirm_task",function(confirm_id) {
+      client = mysql.createConnection(sqlInfo);
+      client.query("select id_employee from Employee where role=\"admin\";",function (err,admin){
+          if(err){
+            console.log(err);
+          }
+          client.query("select id_socket from SocketStore where id_employee="+admin[0].id_employee+";",function (err,admin_socket){
+             
+              for(var i = 0 ; i < admin_socket.length ; i++){
+                io.sockets.socket(admin_socket[i].id_socket).emit("confirm_task_to_admin", confirm_id);
+              }
+          if(err){
+            console.log(err);
+          }
+          });    
+      });
+    });
 });
 
 ////////////////////logowanie/////////////////////////////////////////
@@ -169,7 +188,11 @@ app.get('/logout', function (req, res) {
 app.post('/admin_tasks', function (req, res) {
   if(req.user && req.user.role === 'admin'){
       client = mysql.createConnection(sqlInfo);
-       client.query('SELECT t.id_task,p.name,t.description FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project ORDER BY t.id_task DESC;',function (err,rows){
+       client.query('SELECT t.id_task,p.name,t.description,t.status FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project ORDER BY t.id_task DESC;',function (err,rows){
+          
+          if(err){
+            console.log(err);
+          }
           console.log(rows);
           res.send(rows);
        });
@@ -183,7 +206,11 @@ app.post('/user_tasks', function (req, res) {
 
   if(req.user && req.user.role === 'user'){
        client = mysql.createConnection(sqlInfo);
-       client.query('SELECT t.id_task,p.name,t.description FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project WHERE id_employee='+req.body.id_employee+' ORDER BY t.id_task DESC;',function (err,rows){
+       client.query('SELECT t.id_task,p.name,t.description,t.status FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project WHERE id_employee='+req.body.id_employee+' ORDER BY t.id_task DESC;',function (err,rows){
+          if(err){
+            console.log(err);
+          }
+
           console.log(rows);
           res.send(rows);
        });
@@ -192,9 +219,19 @@ app.post('/user_tasks', function (req, res) {
   }
 });
 
+//zmiana statusu zadania w bazie
+app.post('/update_task_status', function (req, res) {
+  if(req.user && (req.user.role === 'user' || req.user.role === 'admin') ){
+    updateTaskStatus(req.body.id_task,req.body.status);
+    res.send(true);
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
 //przesyła widok zadań do panelu ADMIN
 app.get('/tasks_for_admin', function (req, res) {
-  if(req.user && req.user.role === 'user' || req.user.role === 'admin'){
+  if(req.user && req.user.role === 'user' || req.user.role === 'admin') {
       res.render('task/tasks.ejs',{error:""});
   }else{
      return res.render('public/login.ejs',{error:""});
@@ -529,7 +566,7 @@ var addEmployee = function(data) {
 
 var addTask = function(data) {
     client = mysql.createConnection(sqlInfo);
-    var sql = client.query('INSERT INTO Tasks SET ? ;',data,function (err,rows){
+    var sql = client.query('INSERT INTO Tasks SET ?;',data,function (err,rows){
     if(err){
       console.log(err);           
     }
@@ -647,4 +684,15 @@ var insertSocketConnection = function(data) {
     }
   });
     client.end();
+}
+
+var updateTaskStatus = function(id_task,status) {
+    console.log(id_task +""+ status);
+   client = mysql.createConnection(sqlInfo);
+   client.query('UPDATE Tasks SET status=\"'+status+'\" WHERE id_task='+id_task+';',function (err,rows){
+    if(err){
+      console.log(err);           
+    }
+  });
+   // client.end();
 }

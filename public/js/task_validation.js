@@ -46,7 +46,8 @@ var id_user ="";
                 socket.emit('addTask', {
                     id_project: selectedProject,
                     id_employee: selectedEmployee,
-                    description: desc
+                    description: desc,
+                    status: "W TOKU"
                });
                alert("Dodano zadanie!");
           }
