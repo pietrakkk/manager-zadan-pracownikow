@@ -83,6 +83,25 @@ io.sockets.on('connection', function(socket){
           });    
       });
     });
+
+    socket.on("end_task",function(end_id) {
+    client.query("select id_employee from Tasks where id_task="+end_id+";",function (err,employee_row){
+          var id = employee_row[0].id_employee;
+          client.query("select id_socket from SocketStore where id_employee="+id+";",function (err,id_socket){
+             
+              for(var i = 0 ; i < id_socket.length ; i++){
+                io.sockets.socket(id_socket[i].id_socket).emit("end_task_to_employee", end_id);
+              }
+          if(err){
+            console.log(err);
+          }
+          });    
+    //   console.log("zmieniono status zadania!");
+      });
+     // client.end();
+    });
+   
+
 });
 
 ////////////////////logowanie/////////////////////////////////////////

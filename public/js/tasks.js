@@ -32,7 +32,7 @@ var id_user ="";
              $(".tasks").find("tr:gt(0)").remove();
 
              for(var i = 0 ; i < data.length ; i++){
-                $('.tasks').append("<tr id=\""+data[i].id_task+"\"><td class='id_task'>"+data[i].id_task+"</td><td class='opis'>"+data[i].description+"</td><td class='projekt'>"+data[i].name+"<td class='opcje'><button id=\"project_details\" class=\'button_edit'\ type=\'button\'>Zamknij</button><button id=\"project_details\" class=\'button_warning'\ type=\'button\'>Przeslij błędy</button><button id=\"project_details\" class=\'button_delete'\ type=\'button\'>Usuń</button></td><td class='status'>"+data[i].status+"</td></tr>");
+                $('.tasks').append("<tr id=\""+data[i].id_task+"\"><td class='id_task'>"+data[i].id_task+"</td><td class='opis'>"+data[i].description+"</td><td class='projekt'>"+data[i].name+"<td class='opcje'><button id=\"project_details\" task=\""+data[i].id_task+"\" class=\'button_edit'\ type=\'button\'>Zamknij</button><button id=\"project_details\" class=\'button_delete'\ type=\'button\'>Usuń</button></td><td class='status'>"+data[i].status+"</td></tr>");
              }
             }
           }
@@ -40,9 +40,32 @@ var id_user ="";
   };
   loadTasksList();
 
+  $('.button_edit').click(function() {
+    var id_task = $(this).attr("task");
+
+        updateTaskStatus(id_task,"ZAMKNIĘTE");
+        socket.emit('end_task',id_task); 
+        var status = $("tr[id="+id_task+"]").children("td[class='status']");
+        status[0].innerHTML = "ZAMKNIĘTE";
+  })
+
 
   socket.on('confirm_task_to_admin',function(id_task) {
     var status = $("tr[id="+id_task+"]").children("td[class='status']");
     status[0].innerHTML = 'ZROBIONE';
   });
+
+  var updateTaskStatus = function(id_task_to_update,status) {
+      $.ajax({
+               type: "POST",
+               url: "/update_task_status",
+               dataType: "json",
+               contentType: "application/json",
+               async:false,
+               data: JSON.stringify({id_task: id_task_to_update, status: status}),
+                 success: function (response) {
+               }
+          });
+    }
+
 });

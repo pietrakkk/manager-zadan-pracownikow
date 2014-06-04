@@ -50,11 +50,19 @@ var id_user ="";
                data: JSON.stringify({id_project: data.id_project}),
                async:false, 
                success: function (project_name) {
+                
                    $('.tasks').append("<tr id=\""+data.id_task+"\"><td class='id_task'>"+data.id_task+"</td><td class='opis'>"+data.description+"</td><td class='projekt'>"+project_name.name+"<td class='opcje'><button id=\"confirm_task\" task=\""+data.id_task+"\" class=\'button_edit'\ type=\'button\'>Zatwierdź</button></td><td class='status'>"+data.status+"</td></tr>");
                }
           });
      sortTable();
 	});
+
+  socket.on("end_task_to_employee",function(id_task) {
+    var status = $("tr[id="+id_task+"]").children("td[class='status']");
+        status[0].innerHTML = 'ZAMKNIĘTE';
+  })
+
+
 
   var sortTable = function(){
           var table = $(".tasks");
@@ -81,19 +89,19 @@ var id_user ="";
 
     $(".button_edit").click(function(){
         var id_task = $(this).attr("task");
-        updateTaskStatus(id_task);
+        updateTaskStatus(id_task,"ZROBIONE");
         socket.emit('confirm_task',id_task); 
         var status = $("tr[id="+id_task+"]").children("td[class='status']");
         status[0].innerHTML = 'ZROBIONE';
     });
 
-    var updateTaskStatus = function(id_task_to_update) {
+    var updateTaskStatus = function(id_task_to_update,status) {
       $.ajax({
                type: "POST",
                url: "/update_task_status",
                dataType: "json",
                contentType: "application/json",
-               data: JSON.stringify({id_task: id_task_to_update, status: "ZROBIONE"}),
+               data: JSON.stringify({id_task: id_task_to_update, status: status}),
                  success: function (response) {
                }
           });
