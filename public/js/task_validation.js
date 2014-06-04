@@ -1,20 +1,35 @@
 $( document ).ready(function() {
-	$('#submit_task').click(function(event) {
+var id_user =""; 
+  
+  var loadUsername = function() {
+     $.ajax({
+          url: "/current_user",
+          type: "POST",
+          dataType: 'json',
+          async:false,
+          success: function(data){
+           id_user = data.id_employee;
+          }
+    });
+  }
+  loadUsername();
 
+  //alert(id_user);
+  var socket = io.connect('http://' + location.host,{query: "id_user="+id_user});
+
+        $("#submit_task").click(function(event){                                             
           var selectedProject = $("#project_select option:selected").val(),
                selectedEmployee = $("#reciever_select option:selected").val(),
-               description = $('#description').val(),
+               desc = $('#description').val(),
                isError = false;
         
           $('.error').empty();
-          
-              	
 
            if(selectedEmployee === '-1'){
                isError = true;
                $('.error').append("Wybierz pracownika<br/>");
           }
-     	if(description === ''){
+     	if(desc === ''){
      		isError = true;
               $('.error').append("Opis nie może być pusty<br/>");
      	}
@@ -26,9 +41,17 @@ $( document ).ready(function() {
      	if(isError){
     		    event.preventDefault();
      	}else{
+
+                event.preventDefault();
+                socket.emit('addTask', {
+                    id_project: selectedProject,
+                    id_employee: selectedEmployee,
+                    description: desc
+               });
                alert("Dodano zadanie!");
           }
      });
+
 
 
       var loadEmployeesList = function(selectedProject) {

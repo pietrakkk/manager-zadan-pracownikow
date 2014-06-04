@@ -34,16 +34,35 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket){
    var data = {
-      username: socket.manager.handshaken[socket.id].query.username,
+      id_employee: socket.manager.handshaken[socket.id].query.id_user,
       id_socket:socket.id
-   }
-   insertSocketConnection(data);
+   };
+    insertSocketConnection(data);
 
-    console.log("Połączono z socket IO");
+    console.log("SOCKET ID: " +data.id_socket);
+    console.log("EMPLOYEE ID: " +data.id_employee);
     
-    socket.on('add_task', function (data) {
-      // console.log(tempUsername);
-       // socket.broadcast.emit('task','Przykładowa wiadomość');    
+    //dodawanie zadania i wysyłanie do konkretnych użytkowników
+    socket.on('addTask', function (task_data) {
+    addTask(task_data);
+    client = mysql.createConnection(sqlInfo);
+    console.log(task_data);
+    client.query("select id_socket from SocketStore where id_employee="+task_data.id_employee+";",function (err,rows){
+               
+          console.log("ROWS LENGTH:"+rows.length);
+          client.query("SELECT * from Tasks ORDER BY id_task DESC LIMIT 1;",function (err,task_data){
+            for(var i = 0 ; i < rows.length ; i++){
+               // console.log(rows[i].id_socket);
+                io.sockets.socket(rows[i].id_socket).emit("task",task_data[0]);  
+            }
+             console.log("TASK DATA: "+task_data[0].id_task);
+             if(err){
+                console.log(err);
+             }
+           });
+      });
+     // client.end();
+      console.log("Własnie dodałem zadanie");   
     });
 });
 
@@ -123,11 +142,18 @@ app.post('/current_user', function (req, res) {
   if(!req.user){
     res.redirect('public/login.ejs');
   }
-  // if(req.user && ( req.user.role === 'admin' || req.user.role === 'user' ) ){
-    if(req.user &&  (req.user.role === 'admin' || req.user.role === 'user')  ){
-    return res.send({username: req.user.username});
+  if(req.user &&  (req.user.role === 'admin' || req.user.role === 'user')  ){
+     client = mysql.createConnection(sqlInfo);
+    client.query("SELECT id_employee FROM Employee WHERE username=\'"+req.user.username+"\';",function (err,rows){
+       console.log("POBRANE ID_EMPLOYEE: "+rows[0].id_employee);
+       return res.send({id_employee: rows[0].id_employee});
+    });
+    client.end();
+  }else{
+     return res.render('public/login.ejs',{error:""});
   }
-});
+  });
+
 
 app.get('/logout', function (req, res) {
     console.log('Zakończenie sesji użytkownika');
@@ -140,18 +166,27 @@ app.get('/logout', function (req, res) {
 
 
 //wyświetla zadania w panelu ADMIN
-app.get('/tasks', function (req, res) {
+app.post('/admin_tasks', function (req, res) {
   if(req.user && req.user.role === 'admin'){
-    return res.send({tasks:"feagareg"});
+      client = mysql.createConnection(sqlInfo);
+       client.query('SELECT t.id_task,p.name,t.description FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project ORDER BY t.id_task DESC;',function (err,rows){
+          console.log(rows);
+          res.send(rows);
+       });
   }else{
      return res.render('public/login.ejs',{error:""});
   }
 });
 
 //wyświetla zadania w panelu USER
-app.get('/user_tasks', function (req, res) {
+app.post('/user_tasks', function (req, res) {
+
   if(req.user && req.user.role === 'user'){
-    return res.send({tasks:"feagareg"});
+       client = mysql.createConnection(sqlInfo);
+       client.query('SELECT t.id_task,p.name,t.description FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project WHERE id_employee='+req.body.id_employee+' ORDER BY t.id_task DESC;',function (err,rows){
+          console.log(rows);
+          res.send(rows);
+       });
   }else{
      return res.render('public/login.ejs',{error:""});
   }
@@ -254,9 +289,22 @@ app.post('/project_by_id', function (req, res) {
   }
 });
 
+
+app.post('/project_name', function (req, res) {
+  var id_project = req.body.id_project;
+  if(req.user &&  (req.user.role === 'admin' || req.user.role === 'user') ){
+      client = mysql.createConnection(sqlInfo);
+      client.query('SELECT name FROM Project WHERE id_project=\''+id_project+'\';',function (err,rows){
+          res.send(rows[0]);
+      });
+    // client.end();
+  }else{
+     return res.render('public/login.ejs',{error:""});
+  }
+});
+
 //pobiera pracownika według id_project
 app.post('/employee_by_id_project', function (req, res) {
-  console.log(req.body);
   var id = req.body.id_project;
 
   if(req.user && req.user.role === 'admin'){
@@ -274,7 +322,6 @@ app.post('/employee_by_id_project', function (req, res) {
 //pobiera pracownika według jego id
 app.post('/employee_by_id', function (req, res) {
   var id = req.body.id_employee;
-  console.log(id);
   if(req.user && req.user.role === 'admin'){
       client = mysql.createConnection(sqlInfo);
       client.query('SELECT id_employee,username,name,surname FROM Employee WHERE id_employee=\''+id+'\';',function (err,rows){
@@ -449,16 +496,7 @@ app.post('/delete_project', function (req, res) {
    }
 });
 
-app.post('/add_task', function (req, res) {
-  console.log(req.body);
-  if(req.user && req.user.role === 'admin'){
-    
-    addTask(req.body);
-   return res.redirect('/');
-   }else{
-      return res.render('public/login.ejs',{error:""});
-   }
-});
+
 
 //przesyła liste obecnych projektów
 app.get('/projects', function (req, res) {
