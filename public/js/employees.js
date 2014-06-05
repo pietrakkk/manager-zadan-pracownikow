@@ -1,4 +1,7 @@
-$( document ).ready(function() {
+/*jshint globalstrict: true, devel: true, browser: true, jquery: true */ 
+$(function(){
+    "use strict";
+
 
 	var loadEmployeesList = function() {
 		$.ajax({
@@ -10,12 +13,12 @@ $( document ).ready(function() {
               $(".employees").find("tr:gt(0)").remove();
 
               for(var i = 0 ; i < data.length ; i++){
- 				$(".employees").append("<tr id=\'"+data[i].id_employee+"\'><td class='name_surname'>"+data[i].name+" "+data[i].surname+"</td><td class='options'><button id=\'edit_employee\' employee=\""+data[i].id_employee+"\" class=\'button_edit'\ type=\'button\'>Edytuj dane</button><button id=\'delete\' employee=\'"+data[i].id_employee+"\' class=\'button_delete'\ type=\'button\'>Usuń</button></td></tr>");              }   
+ 				$(".employees").append("<tr id=\'"+data[i].id_employee+"\'><td class='name_surname'>"+data[i].name+" "+data[i].surname+"</td><td class='options'><button id=\'edit_employee\' employee=\""+data[i].id_employee+"\" class=\'button_edit\' type=\'button\'>Edytuj dane</button><button id=\'delete\' employee=\'"+data[i].id_employee+"\' class=\'button_delete\' type=\'button\'>Usuń</button></td></tr>");              }   
             }
           	
           }
       });	
-	}
+	};
 	loadEmployeesList();
 
 

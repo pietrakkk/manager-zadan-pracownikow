@@ -1,4 +1,6 @@
-$( document ).ready(function() {
+/*jshint globalstrict: true, devel: true, browser: true, jquery: true */ 
+ "use strict";
+$(function(){
 
   
  	$( "#send_login" ).click(function(event) {

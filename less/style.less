@@ -5,7 +5,7 @@ body{
 	padding-bottom:20px;
 }
 .body{
-	width:80%;
+	max-width:1100px;
 	margin:0 auto;
 }
 
@@ -43,9 +43,9 @@ label,input{
 	 text-align: center;
 	 margin-left: auto;
   	 margin-right: auto;
-	 padding:20px 0px 20px 20px;	
-	
+	 padding:20px 0px 20px 20px;
 	 background:#FFBC73;
+	 max-width:1100px;
 }
 .logged_info{
 	 width:100%;
@@ -54,6 +54,11 @@ label,input{
 	 padding-top:5px;
 	 padding-bottom:5px;
 }
+
+.project_details{
+	margin: 0 auto;
+}
+
 
 ul li {
 	   list-style-type : none;
@@ -71,7 +76,7 @@ ul li {
 	padding-bottom:20px;
 }
 .title{
-	width: 97%;
+	width: 92%;
 	height: 20px;
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -80,14 +85,14 @@ ul li {
 	font-size: 18px;
 }
 li{
-	width: 200px;
+	width: 90%;
 	height: 15px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background: #62B1D0;
 	text-align: center;
 	font-size: 16px;
-	margin-left:-35px;
+	margin-left:-22px;
 	border: 2px solid #C8DCF0
 }
 li:hover
@@ -117,34 +122,26 @@ p{
 	border-collapse:collapse;
 	text-align:center;
 	width:100%;
-	tr, td{
+}
+
+.tasks button{
+		width:100%;
+	}
+.tasks .id_task{
+		height:50px;
+		width:80px;
+	}
+
+.tasks tr td{
 		border:3px solid #04859D;
 		background:#62B1D0;
 		min-height:50px;
 	}
-	.id_task{
-		height:50px;
-		width:80px;
-	}
-	.opis{
-		width:300px;
-		overflow: break-word;
+.tasks .opis{
+		width:400px;
+		
 		text-align:left;
 	}
-	.project{
-		width:300px;
-	}
-	.opcje{
-		width:100px;
-	}
-	.status{
-		width:100px;
-	}
-	button{
-		width:100%;
-	}
-}
-
 
 th{
 	border:3px solid #04859D;
@@ -156,70 +153,62 @@ th{
 	border-collapse:collapse;
 	text-align:center;
 	width:100%;
-	tr, td{
+}
+
+.projects tr td{
 		border:3px solid #04859D;
 		background:#62B1D0;
 		height:30px;
 	}
-	.nazwa{
+.projects .nazwa{
 		width:70%;
 	}
-	.opcje{
+.projects .opcje{
 		width:30%;
 	}
-	button{
+.projects button{
 		width:50%;
 		display:inline;
-	}
-	
-}
+	}	
 
 .employees{
 	border-collapse:collapse;
 	text-align:center;
-	width:100%;
-	tr, td{
+	width:100%;	
+}
+.employees tr td{
 		border:3px solid #04859D;
 		background:#62B1D0;
 		height:30px;
 	}
-	.name_surname{
+.employees .name_surname{
 		width:70%;
 	}
-	.options{
-		with:30%;
+.employees .options{
+		width:30%;
 	}
 
-	button{
+.employees button{
 		width:50%;
 	}
-}
 
-.new_employee{
-	.name_surname{
+.new_employee .name_surname{
 	width:30%;
 	}
-	.task_reciever{
-		
+
+.new_employee .task_reciever{
+		padding-left:10px;
 		font-size:18px;
 	}
-	tr{
-		padding:top:10px;
-	}
-}
-
-.new_task{
-	
-}
 
 .new_project{
 	margin: 0 auto;
+}
 
-	label{
+.new_project label{
 		float:left;
 		text-align:right;
 	}
-}
 
 .button_edit{
 	font-family: "Myriad Pro";

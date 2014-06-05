@@ -1,4 +1,6 @@
-$( document ).ready(function() {
+/*jshint globalstrict: true, devel: true, browser: true, jquery: true */ 
+$(function(){
+    "use strict";
 
 		//pobiera liste pracowników do select boxa
 		 $.getJSON( "/employees", function( data ) {

@@ -1,3 +1,5 @@
+/* global require */ 
+
 var http = require('http');
 var express = require('express');
 var app = express();
@@ -7,16 +9,18 @@ var LocalStrategy = require('passport-local').Strategy;
 var sessionStore = new connect.session.MemoryStore();
 var url = require('url');
 
+
 var mysql = require('mysql');
 var sqlInfo = {
   host: 'localhost',
   user: 'root',
   password: 'root',
   database: 'manager_pracownikow'
-  }
+  };
 var sessionSecret = 'wielkiSekret44';
 var sessionKey = 'connect.sid';
 var server;
+var client;
 
 server = http.createServer(app);
 
@@ -136,7 +140,7 @@ passport.use(new LocalStrategy(
         return done(null, {
                 username: username,
                 role: user.role
-            })
+            });
       });
       client.end();
     }
@@ -432,8 +436,9 @@ app.post('/add_employee', function (req, res) {
   console.log(req.body);
   if(req.user && req.user.role === 'admin'){
       var data = req.body;
-      data['role'] = 'user';
-      delete data['confirm_password'];
+      // data['role'] = 'user';
+      data.role = 'user';
+      delete data.confirm_password;
       addEmployee(data);
       return res.redirect('/');
    }else{
@@ -467,7 +472,7 @@ app.post('/delete_from_project', function (req, res) {
 app.post('/add_to_project', function (req, res) {
 
   if(req.user && req.user.role === 'admin'){
-     addEmployeeToProject(req.body)
+     addEmployeeToProject(req.body);
       return res.send(true);
    }else{
       return res.render('public/login.ejs',{error:""});
@@ -532,8 +537,10 @@ app.post('/add_project', function (req, res) {
 
   if(req.user && req.user.role === 'admin'){
       var data = req.body;
-      var team = data['team'];
-      delete data['team'];
+      // var team = data['team'];
+          var team = data.team;
+      // delete data['team'];
+          delete data.team;
       addProject(data,team);
       return res.redirect('/');
    }else{
@@ -600,7 +607,7 @@ var addProject = function(data,team) {
       console.log(err);           
     }else{
       if(team && team.length > 0){
-         client.query('SELECT id_project FROM Project WHERE name=\''+data['name']+"\';",function (err,rows){
+         client.query('SELECT id_project FROM Project WHERE name=\''+data.name+"\';",function (err,rows){
           var id_project = rows[0].id_project;
           var tempJSON;
           for(var i = 0 ; i < team.length ; i++){
@@ -608,17 +615,22 @@ var addProject = function(data,team) {
                 id_project: id_project,
                 id_employee: team[i]
               };
-              client.query('INSERT INTO ProjectEmployee SET ? ;',tempJSON,function (err,rows){
-                 if(err){
-                    console.log(err);           
-                  }
-              });
+             insertIntoProjectEmployee(tempJSON);
           }
       });
      // client.end();
     }
   }
 });
+};
+
+var insertIntoProjectEmployee = function(tempJSON) {
+   client = mysql.createConnection(sqlInfo);
+   client.query('INSERT INTO ProjectEmployee SET ? ;',tempJSON,function (err,rows){
+                 if(err){
+                    console.log(err);           
+                  }
+              });
 };
 
 var deleteEmployeeFromProject = function(id_employee) {
@@ -635,7 +647,7 @@ var deleteEmployeeFromProject = function(id_employee) {
                   }
               });
   client.end();
-}
+};
 
 var deleteProject = function(id_project) {
     client = mysql.createConnection(sqlInfo);
@@ -644,19 +656,19 @@ var deleteProject = function(id_project) {
       console.log(err);           
     }
   });
-  var sql = client.query('DELETE FROM ProjectEmployee WHERE id_project='+id_project+';',function (err,rows){
+    sql = client.query('DELETE FROM ProjectEmployee WHERE id_project='+id_project+';',function (err,rows){
     if(err){
       console.log(err);           
     }
   });
-  var sql = client.query('DELETE FROM Tasks WHERE id_project='+id_project+';',function (err,rows){
+    sql = client.query('DELETE FROM Tasks WHERE id_project='+id_project+';',function (err,rows){
     if(err){
       console.log(err);           
     }
   });
 
     client.end();
-}
+};
 
 
 var addEmployeeToProject = function(data) {
@@ -667,7 +679,7 @@ var addEmployeeToProject = function(data) {
     }
   });
     client.end();
-}
+};
 
 
 var editEmployee = function(data) {
@@ -678,7 +690,7 @@ var editEmployee = function(data) {
     }
   });
     client.end();
-}
+};
 
 var deleteEmployee = function(id_employee){
   client = mysql.createConnection(sqlInfo);
@@ -693,7 +705,7 @@ var deleteEmployee = function(id_employee){
     }
   });
     client.end();
-}
+};
 
 var insertSocketConnection = function(data) {
    client = mysql.createConnection(sqlInfo);
@@ -703,7 +715,7 @@ var insertSocketConnection = function(data) {
     }
   });
     client.end();
-}
+};
 
 var updateTaskStatus = function(id_task,status) {
     console.log(id_task +""+ status);
@@ -714,4 +726,4 @@ var updateTaskStatus = function(id_task,status) {
     }
   });
    // client.end();
-}
+};

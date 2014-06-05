@@ -1,4 +1,6 @@
-$( document ).ready(function() {
+/*jshint globalstrict: true, devel: true, browser: true, jquery: true */ 
+$(function(){
+    "use strict";
 
 var id_user =""; 
 	
@@ -12,7 +14,7 @@ var id_user ="";
            id_user = data.id_employee;
           }
     });
-  }
+  };
   loadUsername();
 
 
@@ -32,7 +34,7 @@ var id_user ="";
              $(".tasks").find("tr:gt(0)").remove();
 
              for(var i = 0 ; i < data.length ; i++){
-                $('.tasks').append("<tr id=\""+data[i].id_task+"\"><td class='id_task'>"+data[i].id_task+"</td><td class='opis'>"+data[i].description+"</td><td class='projekt'>"+data[i].name+"<td class='opcje'><button id=\""+data[i].id_task+"\" task=\""+data[i].id_task+"\" class=\'button_edit'\ type=\'button\'>Zamknij</button></td><td class='status'>"+data[i].status+"</td></tr>");                
+                $('.tasks').append("<tr id=\""+data[i].id_task+"\"><td class='id_task'>"+data[i].id_task+"</td><td class='opis'>"+data[i].description+"</td><td class='projekt'>"+data[i].name+"<td class='opcje'><button id=\""+data[i].id_task+"\" task=\""+data[i].id_task+"\" class=\'button_edit\' type=\'button\'>Zamknij</button></td><td class='status'>"+data[i].status+"</td></tr>");                
              }
             }
           }
@@ -67,6 +69,6 @@ var id_user ="";
                  success: function (response) {
                }
           });
-    }
+    };
   
 });

@@ -1,4 +1,7 @@
-$( document ).ready(function() {
+/*jshint globalstrict: true, devel: true, browser: true, jquery: true */ 
+$(function(){
+    "use strict";
+
 
 	$('#confirm_edit_employee').click(function(event) {
      	$('.error').empty();

@@ -1,4 +1,7 @@
-$( document ).ready(function() {
+/*jshint globalstrict: true, devel: true, browser: true, jquery: true */ 
+$(function(){
+    "use strict";
+
 
   var loadTaskList = function() {
         $.get( "/tasks_for_admin", function( data ) {
@@ -49,5 +52,5 @@ $( document ).ready(function() {
               $(".project_select").append("<option value=\'"+data[i].id_project+"\'>"+data[i].name+"</option>");
             }
           });
-   }
+   };
 });

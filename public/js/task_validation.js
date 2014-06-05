@@ -1,4 +1,6 @@
-$( document ).ready(function() {
+/*jshint globalstrict: true, devel: true, browser: true, jquery: true */ 
+$(function(){
+    "use strict";
 var id_user =""; 
   
   var loadUsername = function() {
@@ -11,7 +13,7 @@ var id_user ="";
            id_user = data.id_employee;
           }
     });
-  }
+  };
   loadUsername();
 
   //alert(id_user);
@@ -53,6 +55,20 @@ var id_user ="";
           }
      });
 
+      var getEmployeeById = function(id) {
+          $.ajax({
+               type: "POST",
+               url: "/employee_by_id",
+               dataType: "json",
+               contentType: "application/json",
+               data: JSON.stringify({id_employee: id}),
+               async:false, 
+               success: function (employee) {
+                     $(".reciever_select").append("<option value=\'"+employee.id_employee+"\'>"+employee.name+" "+employee.surname+"</option>");
+               }
+          });
+      };
+
 
 
       var loadEmployeesList = function(selectedProject) {
@@ -67,23 +83,11 @@ var id_user ="";
                success: function (data) {
                   for(var i = 0 ; i < data.length ; i++){
                     ids[i] = data[i].id_employee;
+                    getEmployeeById(ids[i]);
                   }
                }
           });
-          for(var i = 0 ; i < ids.length ; i++){
-               $.ajax({
-               type: "POST",
-               url: "/employee_by_id",
-               dataType: "json",
-               contentType: "application/json",
-               data: JSON.stringify({id_employee: ids[i]}),
-               async:false, 
-               success: function (employee) {
-                     $(".reciever_select").append("<option value=\'"+employee.id_employee+"\'>"+employee.name+" "+employee.surname+"</option>");
-               }
-          });
-          } 
-   }
+   };
       $(".project_select").change(function() {
           var selectedProject = $(this).val();
            $(".reciever_select").empty();          

@@ -5,7 +5,7 @@ body {
   padding-bottom: 20px;
 }
 .body {
-  width: 80%;
+  max-width: 1100px;
   margin: 0 auto;
 }
 .error {
@@ -39,6 +39,7 @@ input {
   margin-right: auto;
   padding: 20px 0px 20px 20px;
   background: #FFBC73;
+  max-width: 1100px;
 }
 .logged_info {
   width: 100%;
@@ -46,6 +47,9 @@ input {
   background: #FFA340;
   padding-top: 5px;
   padding-bottom: 5px;
+}
+.project_details {
+  margin: 0 auto;
 }
 ul li {
   list-style-type: none;
@@ -63,7 +67,7 @@ ul li {
   padding-bottom: 20px;
 }
 .title {
-  width: 97%;
+  width: 92%;
   height: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -72,14 +76,14 @@ ul li {
   font-size: 18px;
 }
 li {
-  width: 200px;
+  width: 90%;
   height: 15px;
   padding-top: 10px;
   padding-bottom: 10px;
   background: #62B1D0;
   text-align: center;
   font-size: 16px;
-  margin-left: -35px;
+  margin-left: -22px;
   border: 2px solid #c8dcf0;
 }
 li:hover {
@@ -106,32 +110,21 @@ p {
   text-align: center;
   width: 100%;
 }
-.tasks tr,
-.tasks td {
-  border: 3px solid #04859D;
-  background: #62B1D0;
-  min-height: 50px;
+.tasks button {
+  width: 100%;
 }
 .tasks .id_task {
   height: 50px;
   width: 80px;
 }
+.tasks tr td {
+  border: 3px solid #04859D;
+  background: #62B1D0;
+  min-height: 50px;
+}
 .tasks .opis {
-  width: 300px;
-  overflow: break-word;
+  width: 400px;
   text-align: left;
-}
-.tasks .project {
-  width: 300px;
-}
-.tasks .opcje {
-  width: 100px;
-}
-.tasks .status {
-  width: 100px;
-}
-.tasks button {
-  width: 100%;
 }
 th {
   border: 3px solid #04859D;
@@ -143,8 +136,7 @@ th {
   text-align: center;
   width: 100%;
 }
-.projects tr,
-.projects td {
+.projects tr td {
   border: 3px solid #04859D;
   background: #62B1D0;
   height: 30px;
@@ -164,8 +156,7 @@ th {
   text-align: center;
   width: 100%;
 }
-.employees tr,
-.employees td {
+.employees tr td {
   border: 3px solid #04859D;
   background: #62B1D0;
   height: 30px;
@@ -174,7 +165,7 @@ th {
   width: 70%;
 }
 .employees .options {
-  with: 30%;
+  width: 30%;
 }
 .employees button {
   width: 50%;
@@ -183,10 +174,8 @@ th {
   width: 30%;
 }
 .new_employee .task_reciever {
+  padding-left: 10px;
   font-size: 18px;
-}
-.new_employee tr {
-  padding: top:10px;
 }
 .new_project {
   margin: 0 auto;
