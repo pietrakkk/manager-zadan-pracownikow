@@ -32,7 +32,7 @@ var id_user ="";
              $(".tasks").find("tr:gt(0)").remove();
 
              for(var i = 0 ; i < data.length ; i++){
-                $('.tasks').append("<tr id=\""+data[i].id_task+"\"><td class='id_task'>"+data[i].id_task+"</td><td class='opis'>"+data[i].description+"</td><td class='projekt'>"+data[i].name+"<td class='opcje'><button id=\""+data[i].id_task+"\" task=\""+data[i].id_task+"\" class=\'button_edit'\ type=\'button\'>Zamknij</button><button id=\"project_details\" class=\'button_delete'\ type=\'button\'>Usuń</button></td><td class='status'>"+data[i].status+"</td></tr>");                
+                $('.tasks').append("<tr id=\""+data[i].id_task+"\"><td class='id_task'>"+data[i].id_task+"</td><td class='opis'>"+data[i].description+"</td><td class='projekt'>"+data[i].name+"<td class='opcje'><button id=\""+data[i].id_task+"\" task=\""+data[i].id_task+"\" class=\'button_edit'\ type=\'button\'>Zamknij</button></td><td class='status'>"+data[i].status+"</td></tr>");                
              }
             }
           }
@@ -44,13 +44,11 @@ var id_user ="";
     var id_task = $(this).attr("task");
 
      var status = $("tr[id="+id_task+"]").children("td[class='status']");
+     updateTaskStatus(id_task,"ZAMKNIĘTE");
+     socket.emit('end_task',id_task); 
+     status[0].innerHTML = "ZAMKNIĘTE";
+  });
 
-        if( status[0].innerHTML !== 'W TOKU'){
-          updateTaskStatus(id_task,"ZAMKNIĘTE");
-          socket.emit('end_task',id_task); 
-          status[0].innerHTML = "ZAMKNIĘTE";
-        }  
-  })
 
 
   socket.on('confirm_task_to_admin',function(id_task) {
@@ -70,5 +68,5 @@ var id_user ="";
                }
           });
     }
-
+  
 });

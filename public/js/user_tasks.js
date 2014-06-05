@@ -60,7 +60,6 @@ var id_user ="";
   socket.on("end_task_to_employee",function(id_task) {
     var status = $("tr[id="+id_task+"]").children("td[class='status']");
         status[0].innerHTML = 'ZAMKNIĘTE';
-        $("tr[class='"+id_task+"'").remove();
   })
 
 
