@@ -50,20 +50,12 @@ var id_user = "";
 	loadTasksList();
 
 	socket.on("task",function(data) {
-     // $.ajax({
-     //           type: "POST",
-     //           url: "/project_name",
-     //           dataType: "json",
-     //           contentType: "application/json",
-     //           data: JSON.stringify({id_project: data.id_project}),
-     //           async:false, 
-     //           success: function (project_name) {
-     //               $('.tasks').append("<tr id=\""+data.id_task+"\" class='"+data.id_task+"''><td class='id_task'>"+data.id_task+"</td><td class='opis'>"+data.description+"</td><td class='projekt'>"+project_name.name+"<td class='opcje'><button id=\"confirm_task\" task=\""+data.id_task+"\" class=\'button_edit\' type=\'button\'>Zatwierdź</button></td><td class='status'>"+data.status+"</td></tr>");
-     //           }
-     //      });
-     // sortTable();
      loadTaskListContent();
 	});
+
+    socket.on("deleted_projects",function(data) {
+     loadTaskListContent();
+  });
 
   socket.on("end_task_to_employee",function(id_task) {
     var status = $("tr[id="+id_task+"]").children("td[class='status']");
@@ -99,7 +91,7 @@ var id_user = "";
         var status = $("tr[id="+id_task+"]").children("td[class='status']");
         
 
-        if( status[0].innerHTML !== 'ZAMKNIĘTE' && status[0].innerHTML !== 'ZAMKNI?TE'){
+        if( status[0].innerHTML !== 'ZAMKNIĘTE'){
             updateTaskStatus(id_task,"ZROBIONE");
             socket.emit('confirm_task',id_task); 
             status[0].innerHTML = 'ZROBIONE';

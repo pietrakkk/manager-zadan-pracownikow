@@ -188,8 +188,8 @@ th {
   font-family: "Myriad Pro";
   font-size: 13px;
   color: white;
-  background: #8fd163;
-  border: 1px solid #8fd163;
+  background: green;
+  border: 1px solid green;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   -khtml-border-radius: 6px;
@@ -202,8 +202,8 @@ th {
   font-family: "Myriad Pro";
   font-size: 13px;
   color: white;
-  background: #8fd163;
-  border: 1px solid #6ab83d;
+  background: #8fd167;
+  border: 1px solid #6ab837;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   -khtml-border-radius: 6px;

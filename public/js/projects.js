@@ -1,5 +1,23 @@
 $( document ).ready(function() {
 
+  var id_user = ""; 
+  
+  var loadUsername = function() {
+     $.ajax({
+          url: "/current_user",
+          type: "POST",
+          dataType: 'json',
+          async:false,
+          success: function(data){
+          id_user = data.id_employee;
+          }
+    });
+  };
+  loadUsername();
+
+  var socket = io.connect('http://' + location.host,{query: "id_user="+id_user});
+
+
   var loadProjects = function() {
     $.ajax({
           url: "/projects",
@@ -35,6 +53,7 @@ $( document ).ready(function() {
                     $("tr[id="+id_project+"]").remove();
                    }
               });
+        socket.emit("project_delete");
       }
   });
 

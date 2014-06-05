@@ -6,9 +6,10 @@ $(function(){
 	$('#confirm_edit_employee').click(function(event) {
      	$('.error').empty();
       var name = $("#name").val(),
-          surname = $("#surname").val();
+          surname = $("#surname").val(),
+          username = $("#username").val();
 
-          if(name.length === 0 || surname.length === 0){
+          if(name.length === 0 || surname.length === 0 || username.length === 0){
             	$(".new_employee p").html("Zostawiłeś puste pola!");
             	event.preventDefault();
           }else{
