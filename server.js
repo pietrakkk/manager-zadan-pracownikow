@@ -70,7 +70,6 @@ io.sockets.on('connection', function(socket){
            });
           }
       });
-     // client.end();
       console.log("Własnie dodałem zadanie");   
     });
 
@@ -187,6 +186,7 @@ app.get('/', function (req, res) {
   }
 });
 
+//pobieranie id obecnie zalogowanego użytkownika
 app.post('/current_user', function (req, res) {
   if(!req.user){
     res.redirect('public/login.ejs');
@@ -194,8 +194,17 @@ app.post('/current_user', function (req, res) {
   if(req.user &&  (req.user.role === 'admin' || req.user.role === 'user')  ){
      client = mysql.createConnection(sqlInfo);
     client.query("SELECT id_employee FROM Employee WHERE username=\'"+req.user.username+"\';",function (err,rows){
-       console.log("POBRANE ID_EMPLOYEE: "+rows[0].id_employee);
-       return res.send({id_employee: rows[0].id_employee});
+      if(err){
+        console.log("Błąd w pobieraniu id");
+      }else{
+        if(rows.length > 0){
+          console.log("POBRANE ID_EMPLOYEE: "+rows[0].id_employee);
+          return res.send({id_employee: rows[0].id_employee});
+        }else{
+          return res.redirect('public/login.ejs',{error:""});
+        }
+      }
+        return res.redirect('public/login.ejs',{error:""});
     });
     client.end();
   }else{
@@ -221,7 +230,7 @@ app.post('/admin_tasks', function (req, res) {
        client.query('SELECT t.id_task,p.name,t.description,t.status FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project WHERE status!="ZAMKNIĘTE" ORDER BY t.id_task DESC;',function (err,rows){
           
           if(err){
-            console.log(err);
+            console.log("Bład w pobieraniu zadań admina:  "+err);
           }
           console.log(rows);
           res.send(rows);
@@ -238,9 +247,8 @@ app.post('/user_tasks', function (req, res) {
        client = mysql.createConnection(sqlInfo);
        client.query('SELECT t.id_task,p.name,t.description,t.status FROM Tasks t LEFT JOIN Project p ON t.id_project=p.id_project WHERE id_employee='+req.body.id_employee+' AND status!="ZAMKNIĘTE" ORDER BY t.id_task DESC;',function (err,rows){
           if(err){
-            console.log(err);
+            console.log("Bład w pobieraniu zadań usera:  "+err);
           }
-
           console.log(rows);
           res.send(rows);
        });
@@ -345,9 +353,10 @@ app.post('/project_by_id', function (req, res) {
                 employee_rows:employee_rows
               };
         if(err){
-          console.log(err);           
+          console.log("Bład w pobieraniu projektu po id: "+err);           
+        }else{
+           res.send(data);
         }
-        res.send(data);
       });
     });
     // client.end();
@@ -362,7 +371,11 @@ app.post('/project_name', function (req, res) {
   if(req.user &&  (req.user.role === 'admin' || req.user.role === 'user') ){
       client = mysql.createConnection(sqlInfo);
       client.query('SELECT name FROM Project WHERE id_project=\''+id_project+'\';',function (err,rows){
-          res.send(rows[0]);
+          if(err){
+              console.log("Bład w pobieraniu projektu po name: "+err);   
+          }else{
+              res.send(rows[0]);
+          }
       });
     // client.end();
   }else{
@@ -377,8 +390,11 @@ app.post('/employee_by_id_project', function (req, res) {
   if(req.user && req.user.role === 'admin'){
       client = mysql.createConnection(sqlInfo);
       client.query('SELECT id_employee FROM ProjectEmployee WHERE id_project=\''+id+'\';',function (err,rows){
-
-        res.send(rows);
+          if(err){
+              console.log("Bład w pobieraniu user po id: "+err);   
+          }else{
+               res.send(rows);
+          }
       });
       client.end();
   }else{
@@ -392,7 +408,11 @@ app.post('/employee_by_id', function (req, res) {
   if(req.user && req.user.role === 'admin'){
       client = mysql.createConnection(sqlInfo);
       client.query('SELECT id_employee,username,name,surname FROM Employee WHERE id_employee=\''+id+'\';',function (err,rows){
-        res.send(rows[0]);
+        if(err){
+          console.log("Błąd w pobieraniu użytkownika po id: " + err);
+        }else{
+          res.send(rows[0]);
+        }
       });
       client.end();
   }else{
@@ -421,9 +441,10 @@ app.get('/employees', function (req, res) {
      client = mysql.createConnection(sqlInfo);
     client.query('SELECT id_employee,name,surname FROM Employee WHERE role=\'user\';',function (err,rows){
     if(err){
-      console.log(err);           
-    }
-       return res.send(rows);  
+      console.log("Bład w pobieraniu userów: "+err);           
+    }else{
+        return res.send(rows); 
+    } 
     });
     client.end();
   }else{
@@ -443,7 +464,6 @@ app.post('/add_employee', function (req, res) {
   console.log(req.body);
   if(req.user && req.user.role === 'admin'){
       var data = req.body;
-      // data['role'] = 'user';
       data.role = 'user';
       delete data.confirm_password;
       addEmployee(data);
@@ -492,19 +512,19 @@ app.post('/check_username', function (req, res) {
   if(req.user && req.user.role === 'admin'){
     client = mysql.createConnection(sqlInfo);
     client.query('SELECT username FROM Employee WHERE username=\''+username+"\';",function (err,rows){
-    console.log(rows);
-    if(err){
-      console.log(err);           
-    }
-      if(rows){
-        if(rows[0]){
-          return res.send(true);  
+      if(err){
+        console.log("Błąd w sprawdzaniu czy user jest w bazie: " + err);           
       }else{
-        return res.send(false);  
+         if(rows){
+            if(rows[0]){
+              return res.send(true);  
+            }else{
+              return res.send(false);  
+            }
+        }else{
+          return res.send(false);  
+        }
       }
-    }else{
-       return res.send(false);  
-    }
     });
     client.end();
   }else{
@@ -518,9 +538,8 @@ app.post('/check_projectname', function (req, res) {
   if(req.user && req.user.role === 'admin'){
     client = mysql.createConnection(sqlInfo);
     client.query('SELECT name FROM Project WHERE name=\''+projectname+"\';",function (err,rows){
-    console.log(rows);
     if(err){
-      console.log(err);           
+      console.log("Błąd w sprawdzaniu nazwy projektu: "+err);           
     }
     if(rows){
       if(rows[0]){
@@ -557,7 +576,6 @@ app.post('/add_project', function (req, res) {
 
 //usuwa projekt z bazy danych
 app.post('/delete_project', function (req, res) {
-
   if(req.user && req.user.role === 'admin'){
     deleteProject(req.body.id_project);
     res.send(true);
@@ -574,9 +592,10 @@ app.get('/projects', function (req, res) {
        client = mysql.createConnection(sqlInfo);
          client.query('SELECT id_project,name,description FROM  Project;',function (err,employee_rows){
             if(err){
-              console.log(err);           
-            }
-            return res.send(employee_rows);  
+              console.log("Błąd w pobieraniu projektów: "+err);           
+            }else{
+               return res.send(employee_rows);
+            }   
          });
          client.end();
   }else{
@@ -589,9 +608,8 @@ app.get('/projects', function (req, res) {
 var addEmployee = function(data) {
     client = mysql.createConnection(sqlInfo);
     var sql = client.query('INSERT INTO Employee SET ? ;',data,function (err,rows){
-
     if(err){
-      console.log(err);           
+      console.log("Błąd w dodawaniu usera: "+err);           
     }
   });
     client.end();
@@ -601,7 +619,7 @@ var addTask = function(data) {
     client = mysql.createConnection(sqlInfo);
     var sql = client.query('INSERT INTO Tasks SET ?;',data,function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w dodawaniu zadania:" +err);           
     }
   });
     client.end();
@@ -611,11 +629,14 @@ var addProject = function(data,team) {
     client = mysql.createConnection(sqlInfo);
     var sql = client.query('INSERT INTO Project SET ? ;',data,function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w dodawaniu projektu: "+err);           
     }else{
       if(team && team.length > 0){
-         client.query('SELECT id_project FROM Project WHERE name=\''+data.name+"\';",function (err,rows){
-          console.log("PROJECT: "+rows);
+         client.query('SELECT id_project FROM Project WHERE name=\''+data.name+"\';",function (err,rows){  
+          if(err){
+            console.log("Błąd w pobieraniu projektu po name:" +err);
+          }else{
+               console.log("PROJECT: "+rows);
           var id_project = rows[0].id_project;
           var tempJSON;
           for(var i = 0 ; i < team.length ; i++){
@@ -625,6 +646,7 @@ var addProject = function(data,team) {
               };
              insertIntoProjectEmployee(tempJSON);
           }
+        }
       });
      // client.end();
     }
@@ -636,7 +658,7 @@ var insertIntoProjectEmployee = function(tempJSON) {
    client = mysql.createConnection(sqlInfo);
    client.query('INSERT INTO ProjectEmployee SET ? ;',tempJSON,function (err,rows){
                  if(err){
-                    console.log(err);           
+                    console.log("Błąd w dodawnaiu pracownika:" +err);           
                   }
               });
 };
@@ -645,13 +667,13 @@ var deleteEmployeeFromProject = function(id_employee) {
    client = mysql.createConnection(sqlInfo);
    client.query('DELETE FROM ProjectEmployee WHERE id_employee='+id_employee+';',function (err,rows){
                  if(err){
-                    console.log(err);           
+                    console.log("Błąd w dodawaniu do ProjectEmployee: "+err);           
                   }
 
               });
     client.query('UPDATE Tasks SET id_employee=null WHERE id_employee='+id_employee+';',function (err,rows){
                  if(err){
-                    console.log(err);           
+                    console.log("Błąd w update TASK: "+err);           
                   }
               });
   client.end();
@@ -661,7 +683,7 @@ var deleteProject = function(id_project) {
     client = mysql.createConnection(sqlInfo);
     var sql = client.query('DELETE FROM Project WHERE id_project='+id_project+';',function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w usuwaniu projektu: "+err);           
     }
   });
     sql = client.query('DELETE FROM ProjectEmployee WHERE id_project='+id_project+';',function (err,rows){
@@ -671,7 +693,7 @@ var deleteProject = function(id_project) {
   });
     sql = client.query('DELETE FROM Tasks WHERE id_project='+id_project+';',function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w usuwaniu zadania: "+ err);           
     }
   });
 
@@ -683,7 +705,7 @@ var addEmployeeToProject = function(data) {
    client = mysql.createConnection(sqlInfo);
     var sql = client.query('INSERT INTO ProjectEmployee SET ?;',data,function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w dodawaniu osoby do projektu: "+err);           
     }
   });
     client.end();
@@ -694,7 +716,7 @@ var editEmployee = function(data) {
    client = mysql.createConnection(sqlInfo);
     var sql = client.query('UPDATE Employee SET ? WHERE id_employee=\''+data.id_employee+'\';',data,function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w update pracownika:" +err);           
     }
   });
     client.end();
@@ -704,12 +726,12 @@ var deleteEmployee = function(id_employee){
   client = mysql.createConnection(sqlInfo);
  var sql = client.query('DELETE FROM Employee WHERE id_employee='+id_employee+';',function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w usuwaniu pracownika: "+err);           
     }
   });
   client.query('UPDATE Tasks SET id_employee=null WHERE id_employee='+id_employee+';',function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w update Task przy usuwaniu pracownika: "+err);           
     }
   });
     client.end();
@@ -719,7 +741,7 @@ var insertSocketConnection = function(data) {
    client = mysql.createConnection(sqlInfo);
     var sql = client.query('INSERT INTO SocketStore SET ?;',data,function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w dodawaniu do SocketStore: "+err);           
     }
   });
     client.end();
@@ -730,7 +752,7 @@ var updateTaskStatus = function(id_task,status) {
    client = mysql.createConnection(sqlInfo);
    client.query('UPDATE Tasks SET status=\"'+status+'\" WHERE id_task='+id_task+';',function (err,rows){
     if(err){
-      console.log(err);           
+      console.log("Błąd w update task status: "+err);           
     }
   });
    // client.end();
