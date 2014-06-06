@@ -88,23 +88,27 @@ $( document ).ready(function() {
   
 
  });
+
+//zrobic
  function checkEmployee(id_employee) {
     
-     var team = $("p[id=\'"+id_employee+"\']").text();
-         
-        if(team === ''){
-          return false;
-        }else{
+     var team = $("button[empl="+id_employee+"]").attr("empl");
+
+        if(team == id_employee){
           return true;
+        }else{
+          return false;
         }
    }
 
  function loadEmployeesList() {   
+     $("#employee_select").empty();
        $.getJSON( "/employees", function( data ) {
             for(var i = 0; i < data.length ; i++){
-              if( !checkEmployee(data[i].id_employee) ){
+               // checkEmployee(data[i].id_employee)
+               if( !checkEmployee(data[i].id_employee) ){
                 $("#employee_select").append("<option value=\'"+data[i].id_employee+"\'>"+data[i].name+" "+data[i].surname+"</option>");
-              }
+               }
             }
           });
    }
@@ -120,8 +124,7 @@ $( document ).ready(function() {
                   data: JSON.stringify({id_employee: id}),
                   success: function (response) {
                     if(true){
-                      $("p[id=\'"+id+"\']").remove();
-                      $("button[empl=\'"+id+"\']").remove();
+                      $("tr[id=\'"+id+"\']").remove();
                        alert("Operacja zakończona pomyślnie!");
                        $("#add_to_project").css("display","none");
                        $("#add_to").css("display","block");
@@ -149,8 +152,7 @@ function confirmEmployee(id_project){
 
           addEmployeeToProject(id_project,employee);
        
-         $("#team").append("<p id=\'"+employee+"\'>"+text+"<p/>");
-         $("#options").append("<button id=\'delete_employee\' empl=\'"+employee+"\' class=\'button_delete\'' onclick=\'clickBut("+employee+")\' type=\'button\'>Usuń</button><br/>");
+         $(".team_table").append("<tr  id=\'"+employee+"\'><td>"+text+"</td><td><button id=\'delete_employee\' empl=\'"+employee+"\' class=\'button_delete\'' onclick=\'clickBut("+employee+")\' type=\'button\'>Usuń</button></td></tr>");
          $("#employee_select option[value='"+employee+"']").remove();
   }
 
@@ -167,9 +169,7 @@ function appendAjax(temp){
                   data: JSON.stringify({id_employee: temp}),
                   async:false,
                   success: function (response) {
-                    $("#team").append("<p id=\'"+temp+"\'>"+response.name+" "+response.surname+"<p/>");
-                    $("#options").append("<button id=\'delete_employee\' empl=\'"+temp+"\' class=\'button_delete\' onclick=\'clickBut("+temp+")\' type=\'button\'>Usuń</button><br/>");
-                    
+                    $(".team_table").append("<tr  id=\'"+temp+"\'><td>"+response.name+" "+response.surname+"</td><td><button id=\'delete_employee\' empl=\'"+temp+"\' class=\'button_delete\'' onclick=\'clickBut("+temp+")\' type=\'button\'>Usuń</button></td></tr>");
                   }  
               });
 }
